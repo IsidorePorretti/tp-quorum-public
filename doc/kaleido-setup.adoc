@@ -1,0 +1,32 @@
+=== Création d'un environnement de développement
+
+Afin de simplifier la mise en oeuvre de ce TP, nous allons nous appuyer sur
+l'offre proposée par https://kaleido.io/[Kaleido] permettant de simplement
+créer un environnement dans lequel plusieurs noeuds
+https://www.jpmorgan.com/country/FR/en/Quorum[Quorum] seront provisionnés
+et serviront à représenter l'infrastructure théorique spécifique à chacun des
+acteurs du Consortium.
+
+==== Création du compte Kaleido
+
+Liste des étapes à mener :
+
+. Aller sur la page d'accueil de https://kaleido.io/[Kaleido],
+. Cliquer sur le bouton *GET STARTED* en haut à droite de l'écran,
+. Sur l'écran *Create an Account*, choisir :
+* *GEO*: Europe
+* *Email*, *Password* : choisir ce que vous voulez
+* *Kaleido Organization* : choisir par exemple ```Smart Cheese```
+
+
+==== Création du Consortium
+
+Vous devriez terminer ces étapes avec un écran similaire à celui ci :
+
+WARNING: Mettre à jour ce screenshot après avoir reproduit les différentes
+  étapes via un autre compte.
+
+image::../tp-quorum/doc/img/kaleido-consortium-setup.png[]
+
+
+==== Création des participants du Consortium

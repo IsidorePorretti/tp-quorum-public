@@ -1,0 +1,6 @@
+== Quorum
+:sourcedir: ..
+
+bla bla
+
+include::kaleido-setup.adoc[]

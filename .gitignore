@@ -1,0 +1,6 @@
+**/.DS_Store
+**/*.pdf
+**/*.html
+dist
+**/.asciidoctor
+doc/img/*.svg
