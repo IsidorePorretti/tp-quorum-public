@@ -1,6 +1,5 @@
 == Quorum
 :sourcedir: ..
-
-bla bla
+ifndef::chapter-img[:chapter-img: ./img]
 
 include::kaleido-setup.adoc[]
