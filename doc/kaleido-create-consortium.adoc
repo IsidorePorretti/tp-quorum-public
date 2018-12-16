@@ -67,7 +67,7 @@ image::{chapter-img}/kaleido-consortium-13.png[align=center, title-align=center]
 .Accès à l'ajout d'un participant 2/2
 image::{chapter-img}/kaleido-consortium-14.png[align=center, title-align=center]
 
-Simplement valider cette étape
+Simplement valider cette étape.
 
 .Ajout d'un autre participant
 image::{chapter-img}/kaleido-consortium-15.png[align=center, title-align=center]

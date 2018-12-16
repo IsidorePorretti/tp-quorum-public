@@ -4,3 +4,5 @@
 dist
 **/.asciidoctor
 doc/img/*.svg
+build
+node_modules

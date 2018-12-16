@@ -3,3 +3,5 @@
 ifndef::chapter-img[:chapter-img: ./img]
 
 include::kaleido-setup.adoc[]
+
+include::smart-contract-address-book.adoc[]
