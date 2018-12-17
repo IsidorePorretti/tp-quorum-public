@@ -1,7 +1,13 @@
-== Quorum
+= Quorum
 :sourcedir: ..
 ifndef::chapter-img[:chapter-img: ./img]
 
 include::kaleido-setup.adoc[]
 
-include::smart-contract-address-book.adoc[]
+include::address-book.adoc[]
+
+include::smart-beaufort.adoc[]
+
+include::truffle-kaleido.adoc[]
+
+include::kaleido-deployment.adoc[]

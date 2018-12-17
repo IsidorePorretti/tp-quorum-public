@@ -1,4 +1,4 @@
-==== Création du compte Kaleido
+=== Création du compte Kaleido
 ifndef::chapter-img[:chapter-img: ./img]
 
 Aller sur la page d'accueil de https://kaleido.io/[Kaleido].

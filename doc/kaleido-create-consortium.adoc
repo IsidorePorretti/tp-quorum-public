@@ -1,9 +1,9 @@
-==== Mise en place du Consortium
+=== Mise en place du Consortium
 ifndef::chapter-img[:chapter-img: ./img]
 
 Maintenant que votre compte est créé, il est temps de créer un Consortium !
 
-===== Création du Consortium
+==== Création du Consortium
 
 .Accès à la création de l'environnement
 image::{chapter-img}/kaleido-consortium-05.png[align=center, title-align=center]
@@ -25,7 +25,7 @@ image::{chapter-img}/kaleido-consortium-08.png[align=center, title-align=center]
 
 Il suffit de cliquer sur *DONE*.
 
-===== Création de l'environnement
+==== Création de l'environnement
 
 .Accès à la création d'un environnement
 image::{chapter-img}/kaleido-consortium-09.png[align=center, title-align=center]
@@ -50,7 +50,7 @@ image::{chapter-img}/kaleido-consortium-11.png[align=center, title-align=center]
 
 Simplement valider cette étape.
 
-===== Création des participants du Consortium
+==== Création des participants du Consortium
 
 .Accès à l'ajout d'un participant
 image::{chapter-img}/kaleido-consortium-12.png[align=center, title-align=center]

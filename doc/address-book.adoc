@@ -1,6 +1,6 @@
-=== Développement d'un smart-contract ```Annuaire```
+== Développement d'un smart-contract ```AddressBook```
 
-==== Contexte
+=== Contexte
 Pour rappel la délivrance du label AOP ne peut se faire que si les éleveurs
 fournissant le lait et la laiterie sont tous domiciliés dans une zone
 géographique précise.
@@ -17,7 +17,7 @@ pouvoir y accéder pour consulter le lieu de chaque établissement.
 TIP: Du coup au travers de ce TP vous serez amenés à mélanger des
   smart-contracts publics avec d'autres privés !
 
-==== Définition du smart-contract ```AddressBook```
+=== Définition du smart-contract ```AddressBook```
 
 Le premier exercice de ce TP va consister à implémenter le
 smart-contract ```AddressBook```.
@@ -27,7 +27,7 @@ https://openzeppelin.org/[OpenZeppelin].
 
 La structure simplifiée du squelette de l'application sera donc la suivante :
 
-[source,solidity]
+[source,solidity,linenums]
 .AddressBook.sol
 ----
 include::../contracts/AddressBook.sol[tag=!implementation]
@@ -39,7 +39,10 @@ include::../contracts/AddressBook.sol[tag=!implementation]
 <5> Le smart-contract émettra un événement ```ParticipantAdded```.
 <6> *Cette fonctionnalité est donc à développer de votre côté !*
 
-==== Implémentation du smart-contract ```AddressBook```
+TIP: L'utilisation d'un smart-contract https://ens.domains[Ethereum Name Service]
+  aurait bien plus de sens pour un usage en production.
+
+=== Implémentation du smart-contract ```AddressBook```
 
 Le code de démarrage de cet exercice est disponible dans le repository Git. +
 Récupérez ce code et installez les dépendances qui vont bien :
@@ -49,6 +52,8 @@ Récupérez ce code et installez les dépendances qui vont bien :
 git checkout exercice-01
 npm install
 npm install -g ganache
+npm install -g truffle
+npm install -g truffle-flattener
 ----
 
 .Codes postaux des participants
@@ -77,10 +82,10 @@ WARNING: Lancez Ganache (que nous utiliserons temporairement) !
 Vous aurez besoin de vérifier votre fichier ```truffle-config.js```. Il devrait
 contenir à minima ce contenu :
 
-[source,javascript]
+[source,javascript,linenums]
 .truffle-config.js
 ----
-include::../truffle-config.js[tags=!quorum]
+include::../truffle-config.js[tags=!quorum;!cooperative]
 ----
 
 Commencez par l'implémentation de la fonction ```addParticipantZipCode()```,
@@ -131,7 +136,3 @@ Using network 'ganache'.
 
   1 passing (336ms)
 ----
-
-==== Déploiement du smart-contract sur Kaleido
-
-TODO
