@@ -1,4 +1,4 @@
-= Quorum
+//= Quorum
 :sourcedir: ..
 ifndef::chapter-img[:chapter-img: ./img]
 

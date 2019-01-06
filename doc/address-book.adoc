@@ -49,6 +49,8 @@ Récupérez ce code et installez les dépendances qui vont bien :
 
 [source,shell]
 ----
+git clone https://gitlab.talanlabs.com/blockchain/formation/tp-quorum.git
+cd tp-quorum
 git checkout exercice-01
 npm install
 npm install -g ganache

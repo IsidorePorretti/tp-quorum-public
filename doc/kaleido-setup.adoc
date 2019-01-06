@@ -1,4 +1,4 @@
-== Création d'un environnement de développement
+== Création d'un environnement de tests
 
 Afin de simplifier la mise en oeuvre de ce TP, nous allons nous appuyer sur
 l'offre proposée par https://kaleido.io/[Kaleido] permettant de simplement
