@@ -1,10 +1,10 @@
 pragma solidity ^0.4.22;
 
-import 'openzeppelin-solidity/contracts/ownership/Ownable.sol'; //<1>
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 /// @title An address book for zip code of participants
-contract AddressBook is Ownable { //<2>
-  mapping(address => uint32) private participantsZipCode; //<3>
+contract AddressBook is Ownable {
+  mapping(address => uint32) private participantsZipCode;
 
   event ParticipantAdded(address indexed participant, uint32 zipCode);
 
@@ -13,23 +13,16 @@ contract AddressBook is Ownable { //<2>
   /// @param participant the participant for which the zip code should be added
   /// @param zipCode the zip code of the participant
   function addParticipantZipCode(address participant, uint32 zipCode) onlyOwner external {
-    // add the participants to the mapping <4>
-    // tag::implementation[]
-    participantsZipCode[participant] = zipCode;
-    // end::implementation[]
+    // add the participants to the mapping
     // emit ParticipantAdded event
-    emit ParticipantAdded(participant, zipCode); //<5>
+    emit ParticipantAdded(participant, zipCode);
   }
 
   /// Checks if the participant is in the geo boundaries for the AOP label
   /// @param participant the address of the participant to check
   /// @return true if the participant is in the geo boundaries of the AOP label
   function checkGeoBoundaries(address participant) public view returns (bool) {
-    // check if the participant is in the allowed zip codes <6>
-    // tag::implementation[]
-    uint32 zipCode = participantsZipCode[participant];
-    return zipCode == 73620 || zipCode == 73210 || zipCode == 73270;
-    // end::implementation[]
+    // check if the participant is in the allowed zip codes
   }
 
 }
