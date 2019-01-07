@@ -46,7 +46,7 @@ contract SmartBeaufort {
     emit CheeseProduced(cheeseMadeFrom, quantity);
   }
 
-  function requestCertificate() public { // <5>
+  function requestCertificate() public view { // <5>
     require(checkGeoBoundaries());
   }
 
@@ -63,7 +63,7 @@ contract SmartBeaufort {
       if (!milkProducerGeoCompliant)
         return false;
     }
-    return cheeseMadeFrom != address(0);
+    return cheeseMadeFrom != address(0) && addressBook.checkGeoBoundaries(cheeseMadeFrom);
     // end::implementation[]
   }
 
