@@ -44,6 +44,8 @@ TIP: L'utilisation d'un smart-contract https://ens.domains[Ethereum Name Service
 
 === Implémentation du smart-contract ```AddressBook```
 
+Installer NodeJS et https://truffleframework.com/ganache[Ganache].
+
 Le code de démarrage de cet exercice est disponible dans le repository Git. +
 Récupérez ce code et installez les dépendances qui vont bien :
 
@@ -53,10 +55,9 @@ git clone https://gitlab.talanlabs.com/blockchain/formation/tp-quorum.git
 cd tp-quorum
 git checkout exercice-01
 npm install
-npm install -g ganache
-npm install -g truffle
-npm install -g truffle-flattener
+npm install -g truffle@v4 <1>
 ----
+<1> Sur Mac préfixer cette commande par ```sudo```.
 
 .Codes postaux des participants
 [%header,cols=2*]
@@ -66,7 +67,7 @@ npm install -g truffle-flattener
 
 |Hauteluce
 |73620
-|Landry
+|Parly
 |73210
 |Beaufort
 |73270
@@ -75,7 +76,7 @@ npm install -g truffle-flattener
 |===
 
 La validation géographique se faisant par code postal, nous considérerons
-les codes postaux suivants comme valides : ```Hauteluce```, ```Landry```, ```Beaufort```. +
+les codes postaux suivants comme valides : ```Hauteluce```, ```Parly```, ```Beaufort```. +
 A l'inverse le code postal de ```Bastia``` sera considéré comme hors de la zone
 géographique du label AOP.
 
