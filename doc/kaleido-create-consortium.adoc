@@ -25,6 +25,8 @@ image::{chapter-img}/kaleido-consortium-08.png[align=center, title-align=center]
 
 Il suffit de cliquer sur *DONE*.
 
+ifdef::backend-pdf[<<<]
+
 ==== Création de l'environnement
 
 .Accès à la création d'un environnement
@@ -81,6 +83,8 @@ Créer les participants suivants :
 * ```Eleveur Parly```
 * ```Eleveur Bastia```
 * ```Laiterie Beaufort```
+
+ifdef::backend-pdf[<<<]
 
 Si tout s'est bien passé, vous venez de créer votre Consortium avec tous les
 participants. Vous devriez avoir un écran similaire à celui-ci :

@@ -1,0 +1,30 @@
+{
+  "address": "0x9d698b0c93a11840e9b0619b94c1ebdb90e2d7f6",
+  "participants": {
+    "Coopérative": {
+      "ethereum_pk": "0x2CB81cC29F1AA530ca84D6300B012D576f129fea",
+      "quorum_pk": "Z2dOLcX8NaPaWniVxOPPOw4R4iPQIROquY1DzX9QcHk=",
+      "zip": 73270
+    },
+    "Eleveur Hauteluce": {
+      "ethereum_pk": "0x3d5B59e1F46eF083Cd3Af0C89bAdd442E78c5476",
+      "quorum_pk": "cLBf0N3V6RWeZHMkYtIjAAto7oKPyoffT9YI93jq6XA=",
+      "zip": 73620
+    },
+    "Eleveur Parly": {
+      "ethereum_pk": "0x9196688D6456067aCA8D23b17edA9FE81B04dbA8",
+      "quorum_pk": "5mNjHhUrXzXboCzWwyvqgaVJWCrBDok18/0DldHF+wM=",
+      "zip": 73210
+    },
+    "Eleveur Bastia": {
+      "ethereum_pk": "0xD00dE0618bF1ea7842C2d8051Be2B75D1f0B30Ab",
+      "quorum_pk": "A9GFoRXqjGNKGjJcr0L8IRZStkCk7mBAa8D+6YDpGwU=",
+      "zip": 20200
+    },
+    "Laiterie Beaufort": {
+      "ethereum_pk": "0x0826F6c5Cc6c6a4d466B30F16920eab2f02A0F6e",
+      "quorum_pk": "apkDe2xAFyyqoTPptvL/4RMiHGJeczgpwn0cyg9XlCQ=",
+      "zip": 73270
+    }
+  }
+}

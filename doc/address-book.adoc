@@ -25,6 +25,8 @@ smart-contract ```AddressBook```.
 Afin de respecter des bonnes pratiques le code s'appuiera sur la librairie
 https://openzeppelin.org/[OpenZeppelin].
 
+ifdef::backend-pdf[<<<]
+
 La structure simplifiée du squelette de l'application sera donc la suivante :
 
 [source,solidity,linenums]
@@ -93,6 +95,8 @@ include::../truffle-config.js[tags=!quorum;!cooperative]
 
 Commencez par l'implémentation de la fonction ```addParticipantZipCode()```,
 puis continuez avec la méthode ```checkGeoBoundaries()```.
+
+ifdef::backend-pdf[<<<]
 
 Vous pouvez compiler et déployer dans Ganache votre smart-contract via la
 commande suivante  :

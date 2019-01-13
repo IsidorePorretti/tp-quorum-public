@@ -1,0 +1,7 @@
+//= Quorum
+:sourcedir: ..
+ifndef::chapter-img[:chapter-img: ./img]
+
+include::interfacage-workflow.adoc[]
+
+include::interfacage-web3.adoc[]

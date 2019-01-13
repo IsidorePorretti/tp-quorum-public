@@ -1,0 +1,186 @@
+== Utilisation des smart-contracts
+
+=== Workflow
+
+Le code que nous avons réalisé dans la section précédente est trop limité pour
+une utilisation réelle. Plusieurs problèmes majeurs sont présents, dont
+notamment :
+
+1. le fait que les livraisons d'un éleveur à la laiterie soit connues de tous
+  les autres éleveurs aussi, ce qui est un problème car la confidentialité est
+  fortement souhaitée dans le cas présent,
+2. le fait que pour tenir compte du point précédent il faut connaître en amont
+  la liste *intégrale* des participants d'une traçabilité car il n'est pas
+  possible avec Quorum d'ajouter à postériori des participants pour qu'ils
+  rejoignent un smart-contracts déjà déployé (Quorum ne propage pas les
+  anciennes transactions).
+
+Afin de se focaliser sur ce chapitre sur la réalisation du front-end, des
+smart-contracts plus avancés vous sont donc fournis :
+
+* ```MilkDelivery``` : garde trace des livraisons de lait et est en mode privé
+  entre l'éleveur et la laiterie.
+* ```DairyProduction``` : est lié à toutes les smart-contracts ```MilkDelivery```
+  et est en mode privé avec les éleveurs concernés et la laiterie
+
+[plantuml,interfacage-workflow,svg,align=center]
+----
+@startuml
+actor "Eleveur 1"
+actor "Eleveur 2"
+actor Laiterie
+database "MilkDelivery #1" << smart-contract >>
+database "MilkDelivery #2" << smart-contract >>
+database "DairyProduction #1" << smart-contract >>
+database "AddressBook" << smart-contract >>
+
+group Livraison du 1er éleveur
+  "Eleveur 1"  -> "MilkDelivery #1": sendMilk(quantity)
+  activate "MilkDelivery #1"
+  "Eleveur 1" <-- "MilkDelivery #1": deliveryID #1
+  Laiterie -> "MilkDelivery #1": validateDelivery(deliveryID #1)
+  "Eleveur 1"  -> "MilkDelivery #1": checkDeliveryApproval()
+  "Eleveur 1" <-- "MilkDelivery #1": acceptation ou refus de la laiterie
+end
+
+group Livraison du 2nd éleveur
+  "Eleveur 2"  -> "MilkDelivery #2": sendMilk(quantity)
+  activate "MilkDelivery #2"
+  "Eleveur 2" <-- "MilkDelivery #2": deliveryID #2
+  Laiterie -> "MilkDelivery #2": validateDelivery(deliveryID #2)
+  "Eleveur 2"  -> "MilkDelivery #1": checkDeliveryApproval()
+  "Eleveur 2" <-- "MilkDelivery #1": acceptation ou refus de la laiterie
+end
+
+group Fabrication du fromage
+  Laiterie  -> "DairyProduction #1": makeCheese(quantity, deliveryID #1, deliveryID #2)
+  activate "DairyProduction #1"
+  Laiterie <-- "DairyProduction #1": cheeseProducedID
+  "DairyProduction #1" -> "MilkDelivery #1": completed()
+  destroy "MilkDelivery #1"
+  "DairyProduction #1" -> "MilkDelivery #2": completed()
+  destroy "MilkDelivery #2"
+end
+
+group Délivrance du label AOP
+  Laiterie  -> "DairyProduction #1": checkGeoBoundaries()
+  "DairyProduction #1" -> AddressBook: checkGeoBoundaries(Eleveur 1)
+  activate AddressBook
+  "DairyProduction #1" -> AddressBook: checkGeoBoundaries(Eleveur 2)
+  "DairyProduction #1" -> AddressBook: checkGeoBoundaries(Laiterie)
+  Laiterie <-- "DairyProduction #1": acception ou non de délivrance du label
+  deactivate AddressBook
+  deactivate "DairyProduction #1"
+end
+
+@enduml
+----
+
+=== Scripting
+
+La suite de ce TP va être dans un format moins guidé que les parties
+précédentes.
+
+Récupérez le code source :
+
+[source]
+----
+git checkout web3
+----
+
+WARNING: Prenez le temps de bien regarder les implémentations des deux
+         smart-contracts fournis !
+
+En s'inspirant du script ```populate-addressbook.js```, vous aller devoir
+réaliser deux scripts simulant des interactions reprenant ce workflow.
+
+TIP: Pour rappel une transaction privative se fait avec Quorum via l'ajout
+     d'une clause ```privateFor``` lors de vos appels, en ajoutant la liste de
+     tous les participants (les adresses pour les transactions privées de
+     Quorum spécifiques à chaque participant). +
+     https://docs.kaleido.io/developer-materials/connecting-with-truffle/[La documentation de Kaleido]
+     détaille comment faire ce type d'appels !
+
+==== Exercice 1
+Dans un premier temps, implémentez un script traitant un cas nominal, à savoir :
+
+TIP: La manière d'instancier un smart-contract n'a pas été illustrée dans ce
+     TP. Cherchez comment faire !
+
+1. L'_Eleveur Hauteluce_ fait une livraison de 453 litres de lait à
+   _Laiterie Beaufort_ via des transactions privées entre uniquement ces deux
+   acteurs.
+.. Déployez une instance de smart-contract ```MilkDelivery``` dans Kaleido,
+.. Faites un appel à la méthode ```sendMilk()```,
+.. _Laiterie Beaufort_ confirme ensuite la bonne réception du lait en faisant
+   un appel à ```validateDelivery()```,
+.. L'_Eleveur Hauteluce_ vérifie que _Laiterie Beaufort_ a bien validé cette
+   livraison en faisant un appel à ```checkDeliveryApproval()```.
+2. L'_Eleveur Parly_ fait une livraison de 867 litres de lait à
+   _Laiterie Beaufort_. +
+   Pour cela reprenez le processus de l'étape 1 en vous appuyant sur une
+   nouvelle instance de ```MilkDelivery```. +
+   Attention à bien respecter les données privatives uniquement entre ces deux
+   acteurs !
+3. _Laiterie Beaufort_ fabrique du fromage. +
+.. Déployez une instance du smart-contract ```DairyProduction``` uniquement
+   avec _Laiterie Beaufort_ et _Coopérative_ comme participants privés,
+.. Faites un un appel à ```makeCheese```.
+4. _Coopérative_ fait un appel au smart-contract ```DairyProduction```
+   précédemment déployé pour valider la zone géographique
+   (cf ```checkGeoBoundaries```).
+5. _Eleveur Bastia_ fait un appel au smart-contract ```MilkDelivery``` déployé
+   pour la livraison de ```Eleveur Beaufort```. Vous devriez avoir une erreur
+   ou donnée nulle en retour, du fait que les transactions sur ce smart-contract
+   sont privées et excluent ce participant !
+
+==== Exercice 2
+Dans un second temps, implémentez un script traitant un cas en erreur,
+à savoir :
+
+1. L'_Eleveur Hauteluce_ fait une livraison de 453 litres de lait à
+   _Laiterie Beaufort_ via des transactions privées entre uniquement ces deux
+   acteurs.
+.. Déployez une instance de smart-contract ```MilkDelivery``` dans Kaleido,
+.. Faites un appel à la méthode ```sendMilk()```,
+.. _Laiterie Beaufort_ confirme ensuite la bonne réception du lait en faisant
+   un appel à ```validateDelivery()```,
+2. L'*Eleveur Bastia* fait une livraison de 867 litres de lait à
+  _Laiterie Beaufort_. +
+  Pour cela reprenez le processus de l'étape 1 en vous appuyant sur une
+  nouvelle instance de ```MilkDelivery```. +
+  Attention à bien respecter les données privatives uniquement entre ces deux
+  acteurs !
+3. _Laiterie Beaufort_ fabrique du fromage. +
+.. Déployez une instance du smart-contract ```DairyProduction``` uniquement
+   avec _Laiterie Beaufort_ et _Coopérative_ comme participants privés,
+.. Faites un un appel à ```makeCheese```.
+4. _Coopérative_ fait un appel au smart-contract ```DairyProduction```
+   précédemment déployé et détecte une zone géographique *invalide*
+   (cf ```checkGeoBoundaries```).
+
+==== Exercices bonus
+
+Les deux smart-contrats fournis (```MilkDelivery``` et ```DairyProduction```)
+sont livrés sans tests unitaires. Réalisez en !
+
+Ces deux smart-contracts ne sont pas très sécurisés : une laiterie peut par
+exemple appeler la méthode ```sendMilk()``` alors que ça n'a pas de sens.
+En vous appuyant sur OpenZeppelin et notamment le smart-contract
+https://openzeppelin.org/api/docs/learn-about-access-control.html[Roles] qu'il
+fournit, implémenter des rôles _Eleveur_, _Laiterie_ et _Coopérative_ et
+sécurisez correctement les différentes méthodes de ```MilkDelivery```
+et ```DairyProduction```.
+
+=== Synthèse
+
+Au travers ces exercices, vous avez eu l'occasion :
+
+* d'instancier des smart-contracts Quorum en mode privatif,
+* de faire des transactions privatives garantissant la confidentialité des
+  données de ces transactions,
+* de constater comment Kaleido différencie des transactions publiques de
+  transactions privées,
+* d'implémenter un workflow plus représentatif d'un cas réel.
+
+Félicitations !

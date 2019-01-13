@@ -5,17 +5,25 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol'; //<1>
 /// @title An address book for zip code of participants
 contract AddressBook is Ownable { //<2>
   mapping(address => uint32) private participantsZipCode; //<3>
+  mapping(string => address) private indexEthereumAddress;
+  mapping(string => string) private indexQuorumAddress;
 
   event ParticipantAdded(address indexed participant, uint32 zipCode);
 
   /// Adds a participant zip zip code
   /// @dev should only be called by the owner of this contract
+  /// @param name the name of the participant to add
   /// @param participant the participant for which the zip code should be added
+  /// @param quorum the private TX address of the participant
   /// @param zipCode the zip code of the participant
-  function addParticipantZipCode(address participant, uint32 zipCode) onlyOwner external {
+  function addParticipantZipCode(string name,
+      address participant, string quorum,
+      uint32 zipCode) onlyOwner external {
     // add the participants to the mapping <4>
     // tag::implementation[]
     participantsZipCode[participant] = zipCode;
+    indexEthereumAddress[name] = participant;
+    indexQuorumAddress[name] = quorum;
     // end::implementation[]
     // emit ParticipantAdded event
     emit ParticipantAdded(participant, zipCode); //<5>
@@ -30,6 +38,14 @@ contract AddressBook is Ownable { //<2>
     uint32 zipCode = participantsZipCode[participant];
     return zipCode == 73620 || zipCode == 73210 || zipCode == 73270;
     // end::implementation[]
+  }
+
+  function getEthereumAddress(string name) public view returns (address) {
+    return indexEthereumAddress[name];
+  }
+
+  function getQuorumAddress(string name) public view returns (string) {
+    return indexQuorumAddress[name];
   }
 
 }

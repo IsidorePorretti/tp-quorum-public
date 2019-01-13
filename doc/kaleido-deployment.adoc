@@ -1,6 +1,6 @@
 == Déploiement des smart-contracts dans Kaleido
 
-=== AddressBook
+=== Déploiement du smart-contract ```AddressBook```
 
 Le smart-contract ```AddressBook``` étant public, ```truffle``` peut simplement
 le déployer avec la commande suivante :
@@ -31,3 +31,68 @@ Saving artifacts...
     ce smart-contract est déployé de manière publique, donc accessible par tous
     les noeuds du Consortium.
 <2> Adresse à laquelle le smart-contract ```AddressBook``` est déployé.
+
+
+=== Ajout des participants
+
+L````AddressBook``` précédemment déployé sur Quorum n'a pas encore été enrichi
+avec les données des participants.
+
+Outre l'adresse Ethereum et le code postal de chaque participant nous aurons
+aussi besoin de l'adresse pour les transactions privées Quorum.
+
+ifdef::backend-pdf[<<<]
+
+Afin de simplifier cela, un script est fourni permettant de renseigner
+l'```AddressBook``` à partir d'un fichier Json indiquant toutes les données
+utiles.
+
+[source,javascript,linenums]
+.data/addressbook.json
+----
+include::../data/addressbook.json[]
+----
+
+Les modifications à apporter sont les suivantes :
+
+1. Ligne 2, modifiez l'adresse pour qu'elle soit celle à laquelle le
+  smart-contract ```AddressBook``` a été déployé sur votre environnement
+  Kaleido
+2. Ligne 5 (puis pour chaque participant), modifiez ```ethereum_pk``` en mettant
+  à la place la valeur de ```User Accounts``` quand sur vous allez sur
+  *Node Details* du noeud concerné
+3. Ligne 6 (puis pour chaque participant), modifiez ```quorum_pk``` en mettant
+  à la place la valeur de ```Private TX Participant``` quand vous allez sur
+  *Node Details* du noeud concerné
+4. Répétez les étapes 2 et 3 pour chacun des participants
+
+ifdef::backend-pdf[<<<]
+
+Une fois que ce fichier est correctement renseigné, lancez la commande
+suivante :
+
+[source,shell]
+----
+truffle exec --network cooperative populate-addressbook.js
+----
+
+Cela va demander à Truffle de faire des appels à la
+méthode ```addParticipantZipCode()``` pour chaque participant du fichier et
+lancer ces mises à jour en tant que la coopérative (la seule autorisée à faire
+de tels ajouts pour rappel).
+
+Vous devriez avoir un résultat similaire à celui ci :
+
+[source,shell]
+----
+Using network 'cooperative'.
+
+Getting deployed version of AddressBook at address '0x9d698b0c93a11840e9b0619b94c1ebdb90e2d7f6'...
+Adding participant 'Coopérative'...
+Adding participant 'Eleveur Hauteluce'...
+Adding participant 'Eleveur Parly'...
+Adding participant 'Eleveur Bastia'...
+Adding participant 'Laiterie Beaufort'...
+Checking if cooperative is in the addressbook: true
+Finished!
+----

@@ -8,6 +8,8 @@ image::{chapter-img}/kaleido-consortium-01.png[align=center, title-align=center]
 
 Cliquer sur le bouton *Try for Free*.
 
+ifdef::backend-pdf[<<<]
+
 Sur l'écran suivant, choisir :
 
 .Création du compte Kaleido 1/3
