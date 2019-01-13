@@ -1,0 +1,42 @@
+== Interfaçage avec la blockchain
+
+Lors de ce chapitre nous allons nous concerner sur la manière de s'interfacer
+avec les smart-contracts.
+
+WARNING: La mise en oeuvre qui va être faite dans ce TP est tout sauf
+  représentative de ce qu'on ferait normalement. Par simplicité, nous allons
+  considérer que le front-end peut directement communiquer avec Quorum. +
+  Généralement l'architecture traditionnelle serait de livrer des containers
+  Docker (front-end, back-end / API, base NoSQL/cache, Quorum si pas porté par
+  Kaleido) et que chaque acteur fasse tourner cette stack technique sur son
+  infrastructure, Quorum étant en charge de la *synchronisation* des données
+  entre les acteurs.
+
+Avec Ethereum et Quorum, on utilise une API nommé Web3. Il existe au moins
+autant d'implémentation que de langages. Dans notre cas, vu que nous réaliserons
+uniquement un front-end web directement interfaçé avec Quorum, il nous suffit
+d'utiliser une librairie JavaScript.
+
+Rien qu'en JavaScript il existe plusieurs implémentations viables :
+
+* https://github.com/ethereum/wiki/wiki/JavaScript-API#web3-javascript-app-api-for-02xx[web3.js 0.x]
+* https://web3js.readthedocs.io/en/1.0/getting-started.html[web3.js 1.x]
+* https://docs.ethers.io/ethers.js/html/[ethers.js]
+
+Etant donné que nous utilisons déjà Truffle qui fournit plusieurs facilité de
+développement pour l'intégration avec un front-end ou back-end, nous allons
+utiliser web3.js sur lequel Truffle s'appuie.
+
+WARNING: Suivant la version de Truffle que vous utilisez la version de web3.js
+  change. Truffle 4 utilise la version 0.9.x alors que Truffle 5 s'appuie sur
+  la version 1.x.
+
+
+WARNING: Code trop simple
+ soucis de confidentialité livraison de lait
+ archi qu'on va faire loin de représenter un setup usuel
+ utilisation de technos web "simples" pour minimiser les pré-requis de la formation
+
+=== Workflow
+
+=== Interfaçage frontend

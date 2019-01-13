@@ -11,3 +11,5 @@ include::smart-beaufort.adoc[]
 include::truffle-kaleido.adoc[]
 
 include::kaleido-deployment.adoc[]
+
+include::web3.adoc[]
