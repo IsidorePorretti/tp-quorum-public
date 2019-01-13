@@ -172,6 +172,7 @@ fournit, implémenter des rôles _Eleveur_, _Laiterie_ et _Coopérative_ et
 sécurisez correctement les différentes méthodes de ```MilkDelivery```
 et ```DairyProduction```.
 
+
 === Synthèse
 
 Au travers ces exercices, vous avez eu l'occasion :
