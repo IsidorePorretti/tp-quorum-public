@@ -1,9 +1,8 @@
 **/.DS_Store
 **/*.pdf
-**/*.html
 dist
 **/.asciidoctor
 doc/img/*.svg
-build
+build/contracts
 node_modules
 .idea
