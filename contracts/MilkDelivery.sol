@@ -16,6 +16,7 @@ contract MilkDelivery {
     liters = _liters;
     deliveryID = keccak256(abi.encodePacked(msg.sender, liters));
     emit MilkDelivered(msg.sender, liters, deliveryID);
+    return deliveryID;
   }
 
   function validateDelivery(bytes32 _deliveryID) onGoing() public {
