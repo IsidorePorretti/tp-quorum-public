@@ -32,7 +32,6 @@ export default {
   name: 'AccountSelector',
   data: function () {
     return {
-      currentUser: {symbol: '?', name: '???'},
       users: [
         { symbol: 'C', name: 'Coopérative' },
         { symbol: 'H', name: 'Eleveur Hauteluce' },
@@ -42,13 +41,18 @@ export default {
       ]
     }
   },
+  computed: {
+    currentUser: {
+      get () { return this.$store.getters.currentUser }
+    }
+  },
   mounted () {
     this.changeCurrentUser(this.users[0])
   },
   methods: {
     changeCurrentUser (user) {
       console.log(`Switching to user ${user.name}`)
-      this.currentUser = user
+      this.$store.dispatch('changeCurrentUser', user)
     }
   }
 }
