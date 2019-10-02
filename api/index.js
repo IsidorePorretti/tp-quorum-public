@@ -1,15 +1,17 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
-const Participant = require("./Participant");
-const MilkDelivery = require("./MilkDelivery");
-const Cheese = require("./Cheese");
-const CheeseTraceability = require("./CheeseTraceability");
-const Certificate = require("./Certificate");
-const CertificateTraceability = require("./CertificateTraceability");
+const Participant = require("./Models/Participant");
+const MilkDelivery = require("./Models/MilkDelivery");
+const Cheese = require("./Models/Cheese");
+const CheeseTraceability = require("./Models/CheeseTraceability");
+const Certificate = require("./Models/Certificate");
+const CertificateTraceability = require("./Models/CertificateTraceability");
 
 app.use(bodyParser());
+app.use(cors());
 
 //PARTICIPANTS
 app.get('/participants/:participantId', function (req, res) {
@@ -26,6 +28,9 @@ app.get('/milk-deliveries/:milkDeliveryId', function (req, res) {
   res.send(MilkDelivery.getMilkDelivery(req.params.milkDeliveryId))
 });
 
+app.get('/milk-deliveries', function (req, res) {
+  res.send(MilkDelivery.getMilkDeliveries())
+});
 
 //CHEESE
 app.post('/cheeses', function (req, res) {
@@ -34,6 +39,10 @@ app.post('/cheeses', function (req, res) {
 
 app.get('/cheeses/:cheedeId', function (req, res) {
   res.send(Cheese.getCheese(req.params.cheedeId))
+});
+
+app.get('/cheeses', function (req, res) {
+  res.send(Cheese.getCheeses())
 });
 
 //CHEESES TRACEABILITY
