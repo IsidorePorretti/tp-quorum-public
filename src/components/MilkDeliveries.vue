@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+
     <div class="col-12">
       <div class="card">
         <div class="card-header">
@@ -38,17 +39,26 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
+import 'moment/locale/fr'
 
 export default {
   name: 'MilkDeliveries',
-  computed: {
+  asyncComputed: {
     milkDeliveries: {
-      get () {
-        axios.get('http://localhost:3000/milk-deliveries')
-        // .then(response => (this.info = response))
-        return [
-          { id: 'XYZ', date: new Date(), from: 'Eleveur', to: 'Laiterie', quantity: 500, price: 12, completed: 1 }
-        ]
+      async get () {
+        let response = await axios.get('http://localhost:3000/milk-deliveries')
+        return response.data.map((md) => {
+          return {
+            id: md.id,
+            date: moment(md.timestamp * 1000).fromNow(),
+            from: md.from,
+            to: md.to,
+            quantity: md.quantity,
+            price: md.price,
+            completed: 1
+          }
+        })
       }
     }
   },
