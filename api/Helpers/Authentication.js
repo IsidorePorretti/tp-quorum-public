@@ -1,3 +1,5 @@
+const AddressBook = require("../../Data/addressbook");
+
 const credentials = {
   Cooperative: {
     inurl: "https://e0ak3iwzb9:j5TQxx5S7x6ydHE_mnBEQjEG4co03Hqerfru0hPyJmU@e0w8vemqcl-e0c7n7h8wc-rpc.de0-aws.kaleido.io"
@@ -31,7 +33,23 @@ const getInurl = (participant) => {
   }
 };
 
+const getNameFromPublicAddress = (addr) => {
+  switch (addr){
+    case AddressBook.participants["Coopérative"].user_account:
+      return "Coopérative";
+    case AddressBook.participants["Laiterie Beaufort"].user_account:
+      return "Laiterie Beaufort";
+    case AddressBook.participants["Eleveur Hauteluce"].user_account:
+      return "Eleveur Hauteluce";
+    case AddressBook.participants["Eleveur Parly"].user_account:
+      return "Eleveur Parly";
+    case AddressBook.participants["Eleveur Bastia"].user_account:
+      return "Eleveur Bastia";
+  }
+};
+
 module.exports = {
   credentials,
-  getInurl
+  getInurl,
+  getNameFromPublicAddress
 };

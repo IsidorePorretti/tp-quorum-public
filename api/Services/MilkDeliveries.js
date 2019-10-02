@@ -10,9 +10,20 @@ const getMilkDeliveries = async (participant) => {
   const groupAddedABI = ['event MilkDelivered(address indexed milkProducer, uint32 liters, bytes32 deliveryID)']
   const groupAddedInterface = new ethers.utils.Interface(groupAddedABI)
 
+
   const filter = {fromBlock: 7242, toBlock: 'latest'}
   let logs = await web3.getLogs(filter)
-  return logs.map((log) => groupAddedInterface.parseLog(log))
+  let parsedLogs = logs.map((log) => {
+    let milkProducer = credentials.getNameFromPublicAddress(groupAddedInterface.parseLog(log).values.milkProducer)
+    return {
+      "id": groupAddedInterface.parseLog(log).values.deliveryID,
+      "quantity": groupAddedInterface.parseLog(log).values.liters,
+      "from": milkProducer,
+      "rest": groupAddedInterface.parseLog(log)
+    }
+  });
+
+  return parsedLogs
 };
 
 module.exports = {
