@@ -3,8 +3,8 @@ const CheeseTraceability = require("./CheeseTraceability");
 
 const CertificateTraceability = () => {
   return {
-    certificate: Certificate(),
-    cheeseTraceability: CheeseTraceability()
+    certificate: Certificate.Certificate(),
+    cheeseTraceability: CheeseTraceability.CheeseTraceability()
   }
 };
 

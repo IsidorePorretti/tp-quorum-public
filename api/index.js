@@ -7,6 +7,7 @@ const MilkDelivery = require("./MilkDelivery");
 const Cheese = require("./Cheese");
 const CheeseTraceability = require("./CheeseTraceability");
 const Certificate = require("./Certificate");
+const CertificateTraceability = require("./CertificateTraceability");
 
 app.use(bodyParser());
 
@@ -44,6 +45,10 @@ app.get('/cheeses/traceability/:cheedeId', function (req, res) {
 //CERTIFICATES
 app.get('/certificates/:cheedeId', function (req, res) {
   res.send(Certificate.Certificate())
+});
+
+app.get('/certificates/traceability/:certificateId', function (req, res) {
+  res.send(CertificateTraceability.CertificateTraceability())
 });
 
 
