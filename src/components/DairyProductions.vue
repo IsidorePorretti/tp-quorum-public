@@ -36,17 +36,24 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
+import 'moment/locale/fr'
 
 export default {
   name: 'DairyProductions',
-  computed: {
+  asyncComputed: {
     cheeses: {
-      get () {
-        axios.get('http://localhost:3000/cheeses')
-        // .then(response => (this.info = response))
-        return [
-          { id: 'XYZ', date: new Date(), participants: ['Eleveur', 'Laiterie'], certified: true }
-        ]
+      async get () {
+        let response = await axios.get('http://localhost:3000/cheeses')
+        console.log(response.data)
+        return response.data.map((md) => {
+          return {
+            id: md.id,
+            date: moment(md.timestamp * 1000).fromNow(),
+            participants: md.participants,
+            certified: true
+          }
+        })
       }
     }
   },
