@@ -1,5 +1,6 @@
 const uuidv4 = require('uuid/v4')
 const UUID_TRUNCATED_LENGTH = 6
+const MilkDeliveryService = require("../Services/MilkDeliveries");
 
 let milkDeliveries = [
   {
@@ -34,6 +35,9 @@ const getMilkDelivery = (id) => {
 const getMilkDeliveries = () => {
   return milkDeliveries
 }
+/*const getMilkDeliveries = (participant) => {
+  return MilkDeliveryService.getMilkDeliveries(participant)
+};*/
 
 module.exports = {
   MilkDelivery,
