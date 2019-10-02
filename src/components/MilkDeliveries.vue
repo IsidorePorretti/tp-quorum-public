@@ -44,26 +44,33 @@ import 'moment/locale/fr'
 
 export default {
   name: 'MilkDeliveries',
+  computed: {
+    currentUser: {
+      get () { return this.$store.getters.currentUser }
+    }
+  },
   asyncComputed: {
     milkDeliveries: {
       async get () {
-        let response = await axios.get('http://localhost:3000/milk-deliveries')
-        return response.data.map((md) => {
-          return {
-            id: md.id,
-            date: moment(md.timestamp * 1000).fromNow(),
-            from: md.from,
-            to: md.to,
-            quantity: md.quantity,
-            price: md.price,
-            completed: 1
-          }
-        })
+        if (this.currentUser !== '') {
+          let response = await axios.get('http://localhost:3000/milk-deliveries')
+          return response.data.map((md) => {
+            return {
+              id: md.id,
+              date: moment(md.timestamp * 1000).fromNow(),
+              from: md.from,
+              to: md.to,
+              quantity: md.quantity,
+              price: md.price,
+              completed: 1
+            }
+          })
+        }
       }
     }
   },
-  created () {
-    axios.defaults.headers.common['X-Participant'] = this.$store.getters.currentUser
+  beforeCreate () {
+    axios.defaults.headers.common['X-Participant'] = this.$store.getters.currentUser.name
   }
 }
 </script>
