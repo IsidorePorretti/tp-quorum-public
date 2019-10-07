@@ -8,7 +8,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-12">
-              <table class="table">
+              <table class="table table-striped">
                 <thead>
                   <th>Identifiant</th>
                   <th>Date</th>
