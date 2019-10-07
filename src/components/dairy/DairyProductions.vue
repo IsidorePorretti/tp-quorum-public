@@ -39,7 +39,7 @@
               </table>
             </div>
           </div>
-          <div class="row">
+          <div class="row" v-if="creationAllowed">
             <div class="col-12 offset-md-5">
               <button type="button" class="btn btn-light legitRipple" data-toggle="modal" data-target="#make_cheese">
                 Fabriquer du fromage &nbsp; <font-awesome-icon :icon="['fas', 'cheese']" />
@@ -69,6 +69,9 @@ export default {
   computed: {
     currentUser: {
       get () { return this.$store.getters.currentUser }
+    },
+    creationAllowed () {
+      return this.currentUser.name.startsWith('Laiterie')
     }
   },
   asyncComputed: {

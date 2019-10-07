@@ -39,7 +39,7 @@
               </table>
             </div>
           </div>
-          <div class="row">
+          <div class="row" v-if="milkDeliveryAllowed">
             <div class="col-12 offset-md-5">
               <button type="button" class="btn btn-light legitRipple" data-toggle="modal" data-target="#add_milk_delivery">
                 Livrer du lait <i class="icon-paperplane ml-2"/>
@@ -69,6 +69,9 @@ export default {
   computed: {
     currentUser: {
       get () { return this.$store.getters.currentUser }
+    },
+    milkDeliveryAllowed () {
+      return this.currentUser.name.startsWith('Eleveur')
     }
   },
   asyncComputed: {
