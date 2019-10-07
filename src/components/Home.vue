@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import MilkDeliveries from '@/components/MilkDeliveries'
-import DairyProductions from '@/components/DairyProductions'
+import MilkDeliveries from '@/components/milk/MilkDeliveries'
+import DairyProductions from '@/components/dairy/DairyProductions'
 
 export default {
   name: 'Home',

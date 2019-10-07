@@ -1,38 +1,42 @@
+const uuidv4 = require('uuid/v4')
+const UUID_TRUNCATED_LENGTH = 6
+
 let milkDeliveries = [
   {
-    id: 0,
-    from: '0xef93234b974f3266eead6f70a8291e2f3434b3a9',
-    to: '0x83a2f7f154233ff78cb595eebd0b8ef02d982dc4',
+    id: uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
+    from: 'Eleveur Hauteluce',
+    to: 'Laiterie Beaufort',
     quantity: 1000,
     price: 2.25,
-    timestamp: 1570003504
+    timestamp: Date.now(),
+    consumed: true
   }
-];
+]
 
-const MilkDelivery = (id, quantity, price) => {
-
+const MilkDelivery = (quantity, price, dairy) => {
   let md = {
-    id: id,
+    id: uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
     from: 'Eleveur Hauteluce',
-    to: 'Laiterie',
+    to: dairy,
     quantity: quantity,
     price: price,
-    timestamp: 1570003504
-  };
-  milkDeliveries.push(md);
+    timestamp: Date.now(),
+    consumed: false
+  }
+  milkDeliveries.push(md)
   return md
-};
+}
 
 const getMilkDelivery = (id) => {
   return milkDeliveries[id]
-};
+}
 
 const getMilkDeliveries = () => {
   return milkDeliveries
-};
+}
 
 module.exports = {
   MilkDelivery,
   getMilkDelivery,
   getMilkDeliveries
-};
+}

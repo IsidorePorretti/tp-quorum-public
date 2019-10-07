@@ -1,37 +1,41 @@
+const uuidv4 = require('uuid/v4')
+const UUID_TRUNCATED_LENGTH = 6
+
 let cheeses = [{
-  "id": 0,
-  "participants": [
-    "0xef93234b974f3266eead6f70a8291e2f3434b3a9",
-    "0x83a2f7f154233ff78cb595eebd0b8ef02d982dc4"
+  'id': uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
+  'participants': [
+    'Eleveur Hauteluce',
+    'Eleveur Parly',
+    'Laiterie Beaufort'
   ],
-  "timestamp": 1570003504,
-  "mdIdList": [
+  'timestamp': Date.now(),
+  'mdIdList': [
     0,
     1
   ]
 }]
 
-const Cheese = (id, milk) => {
+const Cheese = (deliveries) => {
   let cheese = {
-    id: id,
+    id: uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
     participants: ['0xef93234b974f3266eead6f70a8291e2f3434b3a9', '0x83a2f7f154233ff78cb595eebd0b8ef02d982dc4'],
-    timestamp: 1570003504,
-    mdIdList: milk
+    timestamp: Date.now(),
+    mdIdList: deliveries
   }
   cheeses.push(cheese)
   return cheese
-};
+}
 
 const getCheese = (id) => {
   return cheeses[id]
-};
+}
 
 const getCheeses = () => {
   return cheeses
-};
+}
 
 module.exports = {
   Cheese,
   getCheese,
   getCheeses
-};
+}
