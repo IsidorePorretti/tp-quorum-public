@@ -7,7 +7,7 @@ module.exports = async (config) => {
     let addressBookAddress = addressBookData.address
     let addressBook = await AddressBook.at(addressBookAddress)
     console.log(`Getting deployed version of MDs ...`)
-    let mdHauteluce = await MilkDelivery.at('0x9b302b5079d125b257e7122133777f84ecf8c08a')
+    let mdHauteluce = await MilkDelivery.at('0xd63ff692c1ec9d9fa961d04c0b8295c3286afa47')
     let mdParly = await MilkDelivery.at('0x135fe2cfcaec7d4d659e84b15120f0740a7a21b9')
 
     const mdIdHauteluce = await mdHauteluce.deliveryID()

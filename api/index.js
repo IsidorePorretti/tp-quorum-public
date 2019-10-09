@@ -12,6 +12,9 @@ const CertificateTraceability = require('./Models/CertificateTraceability')
 
 app.use(bodyParser())
 app.use(cors())
+app.use(function (err, req, res, next) {
+  res.status(err.status).send(err.message);
+});
 
 // PARTICIPANTS
 app.get('/participants/:participantId', function (req, res) {
@@ -19,21 +22,32 @@ app.get('/participants/:participantId', function (req, res) {
 })
 
 // MILK DELIVERIES
-app.post('/milk-deliveries', function (req, res) {
-  res.send(MilkDelivery.MilkDelivery(req.body.quantity, req.body.price, req.body.dairy))
-})
+app.post('/milk-deliveries', async function (req, res, next) {
+  let result = await MilkDelivery.MilkDelivery(req.header('x-participant'), req.body.quantity, req.body.price, req.body.dairy)
+  if (result.error) {
+    next({status: 500, message: result.error})
+  } else {
+    res.send(result)
+  }
+});
 
-app.get('/milk-deliveries/:milkDeliveryId', function (req, res) {
-  res.send(MilkDelivery.getMilkDelivery(req.params.milkDeliveryId))
-})
+app.post('/milk-deliveries/:milkDeliveryId/validate', function (req, res) {
+  let result = MilkDelivery.validateMilkDelivery(req.header('x-participant'))
+  if (result.error) {
+    next({status: 500, message: result.error})
+  } else {
+    res.send(result)
+  }
+});
 
-app.get('/milk-deliveries', function (req, res) {
-  res.send(MilkDelivery.getMilkDeliveries())
-})
-/*app.get('/milk-deliveries', async function (req, res) {
+app.get('/milk-deliveries', async function (req, res, next) {
   let mds = await MilkDelivery.getMilkDeliveries(req.header('x-participant'))
-  res.send(mds)
-});*/
+  if (mds.error) {
+    next({status: 500, message: mds.error})
+  } else {
+    res.send(mds)
+  }
+});
 
 // CHEESE
 app.post('/cheeses', function (req, res) {

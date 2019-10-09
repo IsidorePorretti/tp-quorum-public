@@ -1,5 +1,11 @@
 const AddressBook = require("../../Data/addressbook");
 
+const milkhouse = 'milkhouse'
+const cooperative = 'cooperative'
+const farmerHauteluce = 'farmerHauteluce'
+const farmerParly = 'farmerParly'
+const farmeBastia = 'farmeBastia'
+
 const credentials = {
   Cooperative: {
     inurl: "https://e0ak3iwzb9:j5TQxx5S7x6ydHE_mnBEQjEG4co03Hqerfru0hPyJmU@e0w8vemqcl-e0c7n7h8wc-rpc.de0-aws.kaleido.io"
@@ -20,15 +26,15 @@ const credentials = {
 
 const getInurl = (participant) => {
   switch (participant) {
-    case 'cooperative' :
+    case cooperative :
       return credentials.Cooperative.inurl
-    case 'milkhouse':
+    case milkhouse:
       return credentials.Milkhouse.inurl
-    case 'farmerHauteluce' :
+    case farmerHauteluce :
       return credentials.FarmerHauteluce.inurl
-    case 'farmerParly' :
+    case farmerParly :
       return credentials.FarmerParly.inurl
-    case 'farmeBastia' :
+    case farmeBastia :
       return credentials.FarmerBastia.inurl
   }
 };
@@ -48,8 +54,24 @@ const getNameFromPublicAddress = (addr) => {
   }
 };
 
+const getPublicAddressFromName = (participant) => {
+  switch (participant) {
+    case cooperative :
+      return AddressBook.participants["Coopérative"].user_account
+    case milkhouse:
+      return AddressBook.participants["Laiterie Beaufort"].user_account
+    case farmerHauteluce :
+      return AddressBook.participants["Eleveur Hauteluce"].user_account
+    case farmerParly :
+      return AddressBook.participants["Eleveur Parly"].user_account
+    case farmeBastia :
+      return AddressBook.participants["Eleveur Bastia"].user_account
+  }
+};
+
 module.exports = {
   credentials,
   getInurl,
-  getNameFromPublicAddress
+  getNameFromPublicAddress,
+  getPublicAddressFromName
 };

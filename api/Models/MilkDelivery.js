@@ -14,7 +14,7 @@ let milkDeliveries = [
   }
 ]
 
-const MilkDelivery = (quantity, price, dairy) => {
+const MilkDelivery = (participant, quantity, price, dairy) => {
   let md = {
     id: uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
     from: 'Eleveur Hauteluce',
@@ -24,23 +24,24 @@ const MilkDelivery = (quantity, price, dairy) => {
     timestamp: Date.now(),
     consumed: false
   }
-  milkDeliveries.push(md)
-  return md
+  // milkDeliveries.push(md)
+  // return md
+  return MilkDeliveryService.createMilkDelivery(participant, quantity, price, dairy);
 }
 
-const getMilkDelivery = (id) => {
-  return milkDeliveries[id]
-}
-
-const getMilkDeliveries = () => {
+/*const getMilkDeliveries = () => {
   return milkDeliveries
-}
-/*const getMilkDeliveries = (participant) => {
+}*/
+const getMilkDeliveries = (participant) => {
   return MilkDeliveryService.getMilkDeliveries(participant)
-};*/
+};
+
+const validateMilkDelivery = (participant) => {
+  return MilkDeliveryService.validateMilkDelivery(participant)
+};
 
 module.exports = {
   MilkDelivery,
-  getMilkDelivery,
-  getMilkDeliveries
+  getMilkDeliveries,
+  validateMilkDelivery
 }
