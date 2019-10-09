@@ -11,7 +11,7 @@ const getMilkDeliveries = async (participant) => {
   const groupAddedInterface = new ethers.utils.Interface(groupAddedABI)
 
 
-  const filter = {fromBlock: 7242, toBlock: 'latest'}
+  const filter = {fromBlock: 122000, toBlock: 'latest'}
   let logs = await web3.getLogs(filter)
   let parsedLogs = logs.map((log) => {
     let milkProducer = credentials.getNameFromPublicAddress(groupAddedInterface.parseLog(log).values.milkProducer)

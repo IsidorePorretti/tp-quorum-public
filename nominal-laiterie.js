@@ -7,8 +7,8 @@ module.exports = async (config) => {
     let addressBookAddress = addressBookData.address
     let addressBook = await AddressBook.at(addressBookAddress)
     console.log(`Getting deployed version of MDs ...`)
-    let mdHauteluce = await MilkDelivery.at('0xd7d18af1c3d4c4f4c5d8f1de0863454a9d0b8e3d')
-    let mdParly = await MilkDelivery.at('0xe6e5767fff4eb9b17b934b0c1e989e1128ef44b2')
+    let mdHauteluce = await MilkDelivery.at('0x9b302b5079d125b257e7122133777f84ecf8c08a')
+    let mdParly = await MilkDelivery.at('0x135fe2cfcaec7d4d659e84b15120f0740a7a21b9')
 
     const mdIdHauteluce = await mdHauteluce.deliveryID()
     console.log('Milk delivery ID Hauteluce',mdIdHauteluce)

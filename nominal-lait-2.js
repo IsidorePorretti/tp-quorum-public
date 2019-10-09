@@ -10,10 +10,10 @@ module.exports = async (config) => {
     let addressBook = await AddressBook.at(addressBookAddress)
     const laiterieQuorumAddress = await addressBook.getQuorumAddress('Laiterie Beaufort')
 
-    let milkDelivery = await MilkDelivery.new({ privateFor: [laiterieQuorumAddress] })
+    let milkDelivery = await MilkDelivery.new("0xa52C48c00629F0530931353e3Aad7395c8A05422",{ privateFor: [laiterieQuorumAddress] })
     console.log(`MilkDelivery contract deployed at ${milkDelivery.address}`)
 
-    const result = await milkDelivery.sendMilk(867, { privateFor: [laiterieQuorumAddress] })
+    const result = await milkDelivery.sendMilk(867,2, { privateFor: [laiterieQuorumAddress] })
     console.log(result)
 
     console.log("Finished!")

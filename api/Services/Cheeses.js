@@ -10,7 +10,7 @@ const getCheeses = async (participant) => {
   const groupAddedABI = ['event CheeseProduced(address indexed maker, uint32 quantity, bytes32 deliveryID)']
   const groupAddedInterface = new ethers.utils.Interface(groupAddedABI)
 
-  const filter = {fromBlock: 7242, toBlock: 'latest'}
+  const filter = {fromBlock: 122000, toBlock: 'latest'}
   let logs = await web3.getLogs(filter)
   return logs.map((log) => groupAddedInterface.parseLog(log))
 };
