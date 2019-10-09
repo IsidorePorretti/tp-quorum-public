@@ -64,10 +64,13 @@ const createMilkDelivery = async (participant, quantity, price, dairy) => {
     });
     console.log(`MilkDelivery contract deployed at ${milkDelivery.address}`);
 
-    const result = await milkDelivery.sendMilk(quantity, price, {privateFor: [laiterieQuorumAddress],from: user_account_from});
+    const result = await milkDelivery.sendMilk(quantity, price, {
+      privateFor: [laiterieQuorumAddress],
+      from: user_account_from
+    });
 
     console.log("Finished!")
-    return {contract: milkDelivery.address,sendMilk:result}
+    return {contract: milkDelivery.address, sendMilk: result}
   } catch (e) {
     console.log(e)
     return {error: e}
@@ -78,6 +81,8 @@ const validateMilkDelivery = async (participant) => {
   try {
     let provider = new Web3.providers.HttpProvider(credentials.getInurl(participant));
 
+    const user_account_from = credentials.getPublicAddressFromName(participant);
+
     let AddressBook = contract(AddressBookJson);
     let MilkDelivery = contract(MilkDeliveryJson);
     MilkDelivery.setProvider(provider);
@@ -87,21 +92,27 @@ const validateMilkDelivery = async (participant) => {
     let addressBook = await AddressBook.at(addressBookAddress)
     console.log(`Getting deployed version of MDs ...`)
 
-    let mdHauteluce = await MilkDelivery.at('0x53fc2580c8c4038bfc4056bf099de75cab0e8796')
-    let mdParly = await MilkDelivery.at('0xc9d4151cfb60f34e3bd6334b07cb74e89e7a5091')
+    let mdHauteluce = await MilkDelivery.at('0x455a06A1eb0de74a3E007d1FD287B44f4Ee3180d')
+    let mdParly = await MilkDelivery.at('0xA0B7022c549F55f32B33F359b73Eb2C4429b31CA')
 
-    const mdIdHauteluce = await mdHauteluce.deliveryID()
-    console.log('Milk delivery ID Hauteluce',mdIdHauteluce)
-    const mdIdParly = await mdParly.deliveryID()
-    console.log('Milk delivery ID Parly',mdIdParly)
+    const mdIdHauteluce = await mdHauteluce.deliveryID({from: user_account_from})
+    console.log('Milk delivery ID Hauteluce', mdIdHauteluce)
+    const mdIdParly = await mdParly.deliveryID({from: user_account_from})
+    console.log('Milk delivery ID Parly', mdIdParly)
 
     const hauteluceQuorumAddress = await addressBook.getQuorumAddress('Eleveur Hauteluce')
     const parlyQuorumAddress = await addressBook.getQuorumAddress('Eleveur Parly')
 
-    const resultHauteluce = await mdHauteluce.validateDelivery(mdIdHauteluce, { privateFor: [hauteluceQuorumAddress] })
-    console.log('Validate MD Hauteluse',resultHauteluce)
-    const resultParly = await mdParly.validateDelivery(mdIdParly, { privateFor: [parlyQuorumAddress] })
-    console.log('Validate MD Parly',resultParly)
+    const resultHauteluce = await mdHauteluce.validateDelivery(mdIdHauteluce, {
+      privateFor: [hauteluceQuorumAddress],
+      from: user_account_from
+    })
+    console.log('Validate MD Hauteluce', resultHauteluce)
+    const resultParly = await mdParly.validateDelivery(mdIdParly, {
+      privateFor: [parlyQuorumAddress],
+      from: user_account_from
+    })
+    console.log('Validate MD Parly', resultParly)
 
     console.log("Finished!")
   } catch (e) {

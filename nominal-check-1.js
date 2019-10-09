@@ -4,7 +4,7 @@ var addressBookData = require("./data/addressbook.json")
 
 module.exports = async (config) => {
   try {
-    let mdHauteluce = await MilkDelivery.at('0xd7d18af1c3d4c4f4c5d8f1de0863454a9d0b8e3d')
+    let mdHauteluce = await MilkDelivery.at('0x455a06A1eb0de74a3E007d1FD287B44f4Ee3180d')
 
     const mdApproval = await mdHauteluce.checkDeliveryApproval()
     console.log('Milk Delivery Approval: ', mdApproval)
