@@ -42,7 +42,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import API from '@/services/api'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'NewMilkDelivery',
@@ -57,15 +58,13 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters(['currentUser'])
+  },
   methods: {
     async sendMilk () {
-      console.log(`Sending ${this.quantity} liters to '${this.dairy}' at a ${this.price} price / liter...`)
-      let response = await axios.post('http://localhost:3000/milk-deliveries', {
-        quantity: this.quantity,
-        price: this.price,
-        dairy: this.dairy
-      })
-      console.log(response)
+      const api = new API(this.currentUser)
+      return api.sendMilk(this.dairy, this.quantity, this.price)
     }
   }
 }

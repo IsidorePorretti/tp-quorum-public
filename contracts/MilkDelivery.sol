@@ -1,51 +1,50 @@
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.24;
+
 
 contract MilkDelivery {
-  uint32 public liters;
-  uint32 public price;
-  bytes32 public deliveryID;
-  bool dairyApproval;
-  bool public completed;
-  address public addressMilkhouse;
+    uint32 public liters;
+    uint32 public price;
+    bool public dairyApproval;
+    bool public consumed;
+    address public dairyAddress;
 
-  event MilkDelivered(address indexed milkProducer, address addressMilkhouse,  uint32 liters, uint32 price, bytes32 deliveryID);
+    event MilkDelivered(address indexed milkDeliveryAddress, address indexed milkProducer, address dairyAddress, 
+                        uint32 liters, uint32 price);
 
-  constructor(address _addressMilkhouse) public {
-    // tag::implementation[]
-    require(_addressMilkhouse != address(0));
-    addressMilkhouse = _addressMilkhouse;
-    // end::implementation[]
-  }
-  /// Keeps track of a milk delivery
-  /// @dev should only be called by the milk producers of this contract
-  /// @param _liters the liters of milk delivered
-  /// @return the delivery ID
-  function sendMilk(uint32 _liters, uint32 _price) public onGoing() returns (bytes32) {
-    liters = _liters;
-    price = _price;
-    deliveryID = keccak256(abi.encodePacked(msg.sender, liters));
-    emit MilkDelivered(msg.sender, addressMilkhouse, liters, price, deliveryID);
-    return deliveryID;
-  }
+    constructor(address _dairyAddress) public {
+        // tag::implementation[]
+        require(_dairyAddress != address(0));
+        dairyAddress = _dairyAddress;
+        consumed = false;
+        // end::implementation[]
+    }
 
-  function validateDelivery(bytes32 _deliveryID) onGoing() public {
-    // check if the deliveryID is the expected one
-    require(deliveryID == _deliveryID);
-    // mark the delivery as accepted by the dairy
-    dairyApproval = true;
-  }
+    /// Keeps track of a milk delivery
+    /// @dev should only be called by the milk producers of this contract
+    /// @param _liters the liters of milk delivered
+    function sendMilk(uint32 _liters, uint32 _price) public onGoing() {
+        liters = _liters;
+        price = _price;
+        emit MilkDelivered(address(this), msg.sender, dairyAddress, liters, price);
+    }
 
-  function checkDeliveryApproval() public view returns (bool) {
-    return dairyApproval;
-  }
+    function validateDelivery() onGoing() public {
+        // TODO: ensure that only the dairy can approve!
+        // mark the delivery as accepted by the dairy
+        dairyApproval = true;
+    }
 
-  modifier onGoing() {
-    require(!completed);
-    _;
-  }
+    function checkDeliveryApproval() public view returns (bool) {
+        return dairyApproval;
+    }
 
-  function completed() public {
-    completed = true;
-  }
+    modifier onGoing() {
+        require(!consumed);
+        _;
+    }
+
+    function consume() external {
+        consumed = true;
+    }
 
 }

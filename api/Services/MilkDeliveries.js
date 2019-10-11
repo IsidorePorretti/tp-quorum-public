@@ -1,81 +1,96 @@
 const ethers = require('ethers')
-const Web3 = require('web3');
-const credentials = require('../Helpers/Authentication');
-const contract = require("truffle-contract");
+const Web3 = require('web3')
+const credentials = require('../Helpers/Authentication')
+const contract = require('@truffle/contract')
 const MilkDeliveryJson = require('../../build/contracts/MilkDelivery.json')
 const AddressBookJson = require('../../build/contracts/AddressBook.json')
-const addressBookData = require("../../data/addressbook.json")
+const addressBookData = require('../../data/addressbook.json')
 
 const getMilkDeliveries = async (participant) => {
   try {
-    //Laiterie
-    let provider = new Web3.providers.HttpProvider(credentials.getInurl(participant));
-    const web3 = new ethers.providers.Web3Provider(provider);
+    // Laiterie
+    let provider = new Web3.providers.HttpProvider(credentials.getInurl(participant))
+    const web3 = new ethers.providers.Web3Provider(provider)
 
-    const milkDeliveredABI = ['event MilkDelivered(address indexed milkProducer, address addressMilkhouse, uint32 liters, uint32 price, bytes32 deliveryID)']
+    const milkDeliveredABI = ['event MilkDelivered(address indexed milkDeliveryAddress, address indexed milkProducer, address dairyAddress, uint32 liters, uint32 price)']
     const milkDeliveredInterface = new ethers.utils.Interface(milkDeliveredABI)
 
-    const filter = {fromBlock: 126090, toBlock: 'latest'}
+    const filter = {fromBlock: 152496, toBlock: 'latest'}
     let logs = await web3.getLogs(filter)
 
-
-    let result = await logs.map((log) => {
-      let parsedLog = milkDeliveredInterface.parseLog(log)
-      console.log(parsedLog)
-      let milkProducer = credentials.getNameFromPublicAddress(parsedLog.values.milkProducer);
-      console.log(milkProducer)
-      return {
-        "id": parsedLog.values.deliveryID,
-        "quantity": parsedLog.values.liters,
-        "from": milkProducer,
-        "rest": parsedLog
-      }
-    });
+    let result = logs
+      .map(log => {
+        const blockNumber = log.blockNumber
+        // parse log data
+        let parsedLog = milkDeliveredInterface.parseLog(log)
+        // console.log(log)
+        // console.log(parsedLog)
+        let milkProducer = credentials.getNameFromPublicAddress(parsedLog.values.milkProducer)
+        let dairyName = credentials.getNameFromPublicAddress(parsedLog.values.dairyAddress)
+        // console.log(milkProducer)
+        return {
+          "id": parsedLog.values.milkDeliveryAddress,
+          "block": blockNumber,
+          "from": milkProducer,
+          "to": dairyName,
+          "quantity": parsedLog.values.liters,
+          "price": parsedLog.values.price
+        }
+      })
+    // extract block date from block number
+    return await Promise.all(result.map(async r => {
+      const block = await web3.getBlock(r.block)
+      const blockDate = block.timestamp
+      // console.log(`Block number: ${r.block}, Block date: ${blockDate}`)
+      r.timestamp = blockDate
+      return r
+    }))
     return result
   } catch (e) {
     console.log(e)
-    return {error: e};
+    return {error: e}
   }
-};
+}
 
 const createMilkDelivery = async (participant, quantity, price, dairy) => {
   try {
-    let provider = new Web3.providers.HttpProvider(credentials.getInurl(participant));
+    const participantNodeURL = credentials.getInurl(participant)
+    console.log(`Connecting to participant node at ${participantNodeURL}`)
+    let provider = new Web3.providers.HttpProvider(participantNodeURL)
 
-    let addressBookAddress = addressBookData.address;
-    let user_account_from = credentials.getPublicAddressFromName(participant);
-    let AddressBook = contract(AddressBookJson);
-    let MilkDelivery = contract(MilkDeliveryJson);
+    // fetch Ethereum address of the participant
+    let addressBookAddress = addressBookData.address
+    let userAccountFrom = credentials.getPublicAddressFromName(participant)
+    console.log(`Transactions will be sent from '${participant}' having address '${userAccountFrom}'`)
 
-    MilkDelivery.setProvider(provider);
-    AddressBook.setProvider(provider);
+    // setup smart-contracts usage
+    let AddressBook = contract(AddressBookJson)
+    let MilkDelivery = contract(MilkDeliveryJson)
+    MilkDelivery.setProvider(provider)
+    MilkDelivery.defaults({ from: userAccountFrom })
+    AddressBook.setProvider(provider)
 
-    console.log(`Getting deployed version of AddressBook at address '${addressBookAddress}'...`);
-    let addressBook = await AddressBook.at(addressBookAddress);
+    console.log(`Getting deployed version of AddressBook at address '${addressBookAddress}'...`)
+    let addressBook = await AddressBook.at(addressBookAddress)
 
-    console.log(addressBookAddress)
-    console.log(dairy)
-    const laiterieQuorumAddress = await addressBook.getQuorumAddress(dairy);
-    console.log('laiterieQuorumAddress:', laiterieQuorumAddress)
+    const dairyPublicAddress = credentials.getPublicAddressFromName(dairy)
+    const dairyPrivateAddress = await addressBook.getQuorumAddress(dairy)
+    console.log(`Resolved private Quorum address of '${dairy}' to '${dairyPrivateAddress}'`)
 
-    let milkDelivery = await MilkDelivery.new("0xa52C48c00629F0530931353e3Aad7395c8A05422", {
-      privateFor: [laiterieQuorumAddress],
-      from: user_account_from
-    });
-    console.log(`MilkDelivery contract deployed at ${milkDelivery.address}`);
+    console.log(`Deploying MilkDelivery smart-contract...`)
+    let milkDelivery = await MilkDelivery.new(dairyPublicAddress, { privateFor: [dairyPrivateAddress] })
+    console.log(`MilkDelivery contract deployed at ${milkDelivery.address}`)
 
-    const result = await milkDelivery.sendMilk(quantity, price, {
-      privateFor: [laiterieQuorumAddress],
-      from: user_account_from
-    });
+    console.log(`Sending milk delivery transaction (quantity: ${quantity}, price: ${price})...`)
+    const result = await milkDelivery.sendMilk(quantity, price, { privateFor: [dairyPrivateAddress] })
 
-    console.log("Finished!")
+    console.log('Finished!')
     return {contract: milkDelivery.address, sendMilk: result}
   } catch (e) {
     console.log(e)
     return {error: e}
   }
-};
+}
 
 const validateMilkDelivery = async (participant) => {
   try {
@@ -119,10 +134,10 @@ const validateMilkDelivery = async (participant) => {
     console.log(e);
     return {error: e}
   }
-};
+}
 
 module.exports = {
   getMilkDeliveries,
   createMilkDelivery,
   validateMilkDelivery
-};
+}

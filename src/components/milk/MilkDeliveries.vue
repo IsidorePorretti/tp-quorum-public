@@ -56,10 +56,9 @@
 </template>
 
 <script>
+import API from '@/services/api'
 import NewMilkDelivery from '@/components/milk/NewMilkDelivery'
-import axios from 'axios'
-import moment from 'moment'
-import 'moment/locale/fr'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'MilkDeliveries',
@@ -67,9 +66,7 @@ export default {
     'new-milk-delivery': NewMilkDelivery
   },
   computed: {
-    currentUser: {
-      get () { return this.$store.getters.currentUser }
-    },
+    ...mapGetters(['currentUser']),
     milkDeliveryAllowed () {
       return this.currentUser.name.startsWith('Eleveur')
     }
@@ -77,25 +74,16 @@ export default {
   asyncComputed: {
     milkDeliveries: {
       async get () {
-        if (this.currentUser !== '') {
-          let response = await axios.get('http://localhost:3000/milk-deliveries')
-          return response.data.map((md) => {
-            return {
-              id: md.id,
-              date: moment(md.timestamp).fromNow(),
-              from: md.from,
-              to: md.to,
-              quantity: md.quantity,
-              price: md.price,
-              consumed: md.consumed
-            }
-          })
+        if (this.currentUser !== null && this.currentUser.name !== '') {
+          const api = new API(this.currentUser)
+          try {
+            return api.getMilkDeliveries()
+          } catch (e) {
+            console.log(e)
+          }
         }
       }
     }
-  },
-  beforeCreate () {
-    axios.defaults.headers.common['X-Participant'] = this.$store.getters.currentUser.name
   }
 }
 </script>

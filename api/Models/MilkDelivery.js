@@ -1,18 +1,6 @@
 const uuidv4 = require('uuid/v4')
 const UUID_TRUNCATED_LENGTH = 6
-const MilkDeliveryService = require("../Services/MilkDeliveries");
-
-let milkDeliveries = [
-  {
-    id: uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
-    from: 'Eleveur Hauteluce',
-    to: 'Laiterie Beaufort',
-    quantity: 1000,
-    price: 2.25,
-    timestamp: Date.now(),
-    consumed: true
-  }
-]
+const MilkDeliveryService = require("../Services/MilkDeliveries")
 
 const MilkDelivery = (participant, quantity, price, dairy) => {
   let md = {
@@ -26,12 +14,14 @@ const MilkDelivery = (participant, quantity, price, dairy) => {
   }
   // milkDeliveries.push(md)
   // return md
-  return MilkDeliveryService.createMilkDelivery(participant, quantity, price, dairy);
+  return MilkDeliveryService.createMilkDelivery(participant, quantity, price, dairy)
 }
 
-/*const getMilkDeliveries = () => {
+/*
+const getMilkDeliveries = () => {
   return milkDeliveries
-}*/
+}
+*/
 const getMilkDeliveries = (participant) => {
   return MilkDeliveryService.getMilkDeliveries(participant)
 };

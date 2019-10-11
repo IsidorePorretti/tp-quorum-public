@@ -3,6 +3,11 @@ var Web3 = require('web3');
 // end::quorum[]
 
 module.exports = {
+  compilers: {
+    solc: {
+      version: '0.4.24'
+    }
+  },
   networks: {
     // tag::ganache[]
     ganache: {
@@ -26,7 +31,8 @@ module.exports = {
       },
       network_id: "*", // Match any network id
       gasPrice: 0,
-      gas: 4500000
+      gas: 4500000,
+      type: "quorum"
     },
     // end::cooperative[]
     // tag::quorum[]
@@ -37,7 +43,8 @@ module.exports = {
       },
       network_id: "*", // Match any network id
       gasPrice: 0,
-      gas: 4500000
+      gas: 4500000,
+      type: "quorum"
     },
     eleveur_parly_node: {
       provider: () => {
@@ -46,7 +53,8 @@ module.exports = {
       },
       network_id: "*", // Match any network id
       gasPrice: 0,
-      gas: 4500000
+      gas: 4500000,
+      type: "quorum"
     },
     eleveur_bastia_node: {
       provider: () => {
@@ -55,7 +63,8 @@ module.exports = {
       },
       network_id: "*", // Match any network id
       gasPrice: 0,
-      gas: 4500000
+      gas: 4500000,
+      type: "quorum"
     },
     laiterie_beaufort_node: {
       provider: () => {
@@ -64,7 +73,8 @@ module.exports = {
       },
       network_id: "*", // Match any network id
       gasPrice: 0,
-      gas: 4500000
+      gas: 4500000,
+      type: "quorum"
     }
     // end::quorum[]
   }

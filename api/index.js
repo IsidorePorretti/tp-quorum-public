@@ -22,32 +22,32 @@ app.get('/participants/:participantId', function (req, res) {
 })
 
 // MILK DELIVERIES
-app.post('/milk-deliveries', async function (req, res, next) {
-  let result = await MilkDelivery.MilkDelivery(req.header('x-participant'), req.body.quantity, req.body.price, req.body.dairy)
-  if (result.error) {
-    next({status: 500, message: result.error})
-  } else {
-    res.send(result)
-  }
-});
-
-app.post('/milk-deliveries/:milkDeliveryId/validate', function (req, res) {
-  let result = MilkDelivery.validateMilkDelivery(req.header('x-participant'))
-  if (result.error) {
-    next({status: 500, message: result.error})
-  } else {
-    res.send(result)
-  }
-});
-
 app.get('/milk-deliveries', async function (req, res, next) {
-  let mds = await MilkDelivery.getMilkDeliveries(req.header('x-participant'))
+  let mds = await MilkDelivery.getMilkDeliveries(req.header('X-Participant'))
   if (mds.error) {
     next({status: 500, message: mds.error})
   } else {
     res.send(mds)
   }
-});
+})
+
+app.post('/milk-deliveries', async function (req, res, next) {
+  let result = await MilkDelivery.MilkDelivery(req.header('X-Participant'), req.body.quantity, req.body.price, req.body.dairy)
+  if (result.error) {
+    next({status: 500, message: result.error})
+  } else {
+    res.send(result)
+  }
+})
+
+app.post('/milk-deliveries/:milkDeliveryId/validate', function (req, res) {
+  let result = MilkDelivery.validateMilkDelivery(req.header('X-Participant'))
+  if (result.error) {
+    next({status: 500, message: result.error})
+  } else {
+    res.send(result)
+  }
+})
 
 // CHEESE
 app.post('/cheeses', function (req, res) {
@@ -61,10 +61,13 @@ app.get('/cheeses/:cheedeId', function (req, res) {
 app.get('/cheeses', function (req, res) {
   res.send(Cheese.getCheeses())
 })
-/*app.get('/cheeses', async function (req, res) {
-  let cheeses = await Cheese.getCheeses(req.header('x-participant'))
+
+/*
+app.get('/cheeses', async function (req, res) {
+  let cheeses = await Cheese.getCheeses(req.header('X-Participant'))
   res.send(cheeses)
-});*/
+})
+*/
 
 // CHEESES TRACEABILITY
 app.get('/cheeses/traceability/:cheedeId', function (req, res) {

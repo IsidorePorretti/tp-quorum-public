@@ -9,13 +9,13 @@ export const store = new Vuex.Store({
   state,
   mutations: {
     changeCurrentUser (state, user) {
-      console.log('changeCurrentUser Mutation being executed', user)
+      // console.log('changeCurrentUser Mutation being executed', user)
       state.currentUser = user
     }
   },
   actions: {
     changeCurrentUser ({commit}, user) {
-      console.log('changeCurrentUser Action being executed')
+      // console.log('changeCurrentUser Action being executed')
       try {
         commit('changeCurrentUser', user)
       } catch (e) {

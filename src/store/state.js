@@ -1,5 +1,5 @@
 let state = {
-  currentUser: {symbol: '?', name: '???'}
+  currentUser: {symbol: '', name: ''}
 }
 
 export default state

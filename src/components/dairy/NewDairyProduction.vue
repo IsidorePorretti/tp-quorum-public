@@ -28,10 +28,9 @@
 </template>
 
 <script>
+import API from '@/services/api'
 import MilkDeliveryShortLabel from '@/components/milk/MilkDeliveryShortLabel'
-import axios from 'axios'
-import moment from 'moment'
-import 'moment/locale/fr'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'NewDairyProduction',
@@ -43,33 +42,24 @@ export default {
       selectedMilkDeliveries: []
     }
   },
+  computed: {
+    ...mapGetters(['currentUser'])
+  },
   asyncComputed: {
     availableMilkDeliveries: {
       async get () {
-        if (this.currentUser !== '') {
-          let response = await axios.get('http://localhost:3000/milk-deliveries')
-          return response.data.map((md) => {
-            return {
-              id: md.id,
-              date: moment(md.timestamp * 1000).fromNow(),
-              from: md.from,
-              to: md.to,
-              quantity: md.quantity,
-              price: md.price,
-              consumed: md.consumed
-            }
-          }).filter((md) => md.consumed === false)
+        if (this.currentUser !== null && this.currentUser.name !== '') {
+          const api = new API(this.currentUser)
+          const milkDeliveries = await api.getMilkDeliveries()
+          return milkDeliveries.filter((md) => md.consumed === false)
         }
       }
     }
   },
   methods: {
     async makeCheese () {
-      console.log(`Making cheese from ${this.selectedMilkDeliveries}...`)
-      let response = await axios.post('http://localhost:3000/cheeses', {
-        deliveries: this.selectedMilkDeliveries
-      })
-      console.log(response)
+      const api = new API(this.currentUser)
+      return api.makeCheese(this.selectedMilkDeliveries)
     }
   }
 }
