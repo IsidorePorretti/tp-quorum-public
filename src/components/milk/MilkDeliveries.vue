@@ -19,7 +19,7 @@
                   <th class="text-center">Etat</th>
                 </thead>
                 <tbody>
-                  <tr v-for="delivery in milkDeliveries" v-bind:key="delivery.id">
+                  <tr v-for="delivery in milkDeliveries" v-bind:key="delivery.id" v-if="!dataLoading">
                     <td class="delivery-id-col">#{{ delivery.id.substring(0, 6) }}</td>
                     <td>{{ delivery.date }}</td>
                     <td>{{ delivery.from }}</td>
@@ -44,6 +44,11 @@
                       </span>
                     </td>
                   </tr>
+                  <tr v-if="dataLoading">
+                    <td colspan="7" class="delivery-loading">
+                      <GridLoader :color="'#42a5f5'" />
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -61,7 +66,7 @@
     <stack-modal title="Ajouter une livraison de lait" v-on:save="sendMilk"
       :show="showNewMilkDeliveryModal" @close="showNewMilkDeliveryModal=false"
       :saveButton="modalConfirmButtonConfiguration" :cancelButton="modalCancelButtonConfiguration">
-      <form action="#">
+      <form action="#" v-if="!dataLoading">
         <div class="form-group row">
           <label class="col-form-label col-lg-3">Laiterie</label>
           <div class="col-lg-9">
@@ -85,6 +90,9 @@
           </div>
         </div>
       </form>
+      <div v-if="dataLoading" style="text-align: center;">
+        <GridLoader :color="'#42a5f5'" :size="256" />
+      </div>
     </stack-modal>
   </div>
 </template>
@@ -101,6 +109,7 @@ export default {
   },
   data () {
     return {
+      dataLoading: false,
       dairy: null,
       quantity: null,
       price: null,
@@ -129,9 +138,12 @@ export default {
     milkDeliveries: {
       async get () {
         if (this.currentUser !== null && this.currentUser.name !== '') {
+          this.dataLoading = true
           const api = new API(this.currentUser)
           try {
-            return api.getMilkDeliveries()
+            const milkDeliveries = await api.getMilkDeliveries()
+            this.dataLoading = false
+            return milkDeliveries
           } catch (e) {
             console.log(e)
           }
@@ -141,6 +153,7 @@ export default {
   },
   methods: {
     async sendMilk () {
+      this.dataLoading = true
       const api = new API(this.currentUser)
       await api.sendMilk(this.dairy, this.quantity, this.price)
       this.showNewMilkDeliveryModal = false
@@ -157,6 +170,7 @@ export default {
         focusConfirm: false
       })
       if (result.value) {
+        this.dataLoading = true
         const api = new API(this.currentUser)
         await api.approveMilkDelivery(milkDelivery)
         this.$swal('Confirmation', 'Vous avez accepté la livraison !', 'success')
@@ -175,5 +189,8 @@ td.delivery-id-col, td.delivery-quantity-col, td.delivery-price-col, td.delivery
 }
 td.delivery-id-col {
   font-weight: bold;
+}
+td.delivery-loading {
+  text-align: center;
 }
 </style>

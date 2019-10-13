@@ -7,6 +7,7 @@ import { store } from './store/'
 import AsyncComputed from 'vue-async-computed'
 import Fragment from 'vue-fragment'
 import VueSweetalert2 from 'vue-sweetalert2'
+import * as VueSpinnersCss from 'vue-spinners-css'
 import AppPlugin from './plugins/AppPlugin'
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -18,6 +19,7 @@ Vue.config.productionTip = false
 Vue.use(AsyncComputed)
 Vue.use(Fragment.Plugin)
 Vue.use(VueSweetalert2)
+Vue.use(VueSpinnersCss)
 Vue.use(AppPlugin, { store })
 
 // Font Awesome

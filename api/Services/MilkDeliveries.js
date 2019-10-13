@@ -6,7 +6,7 @@ const MilkDeliveryJson = require('../../build/contracts/MilkDelivery.json')
 const AddressBookJson = require('../../build/contracts/AddressBook.json')
 const addressBookData = require('../../data/addressbook.json')
 
-const FILTER_FROM_BLOCK = 161492
+const FILTER_FROM_BLOCK = 161973
 
 const setupWeb3 = async (participant) => {
   const participantNodeURL = credentials.getInurl(participant)
