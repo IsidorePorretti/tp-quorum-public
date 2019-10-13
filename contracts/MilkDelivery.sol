@@ -6,6 +6,7 @@ contract MilkDelivery {
     uint32 public price;
     bool public dairyApproval;
     bool public consumed;
+    address public milkProducerAddress;
     address public dairyAddress;
 
     event MilkDelivered(address indexed milkDeliveryAddress, address indexed milkProducer, address dairyAddress, 
@@ -14,7 +15,9 @@ contract MilkDelivery {
     constructor(address _dairyAddress) public {
         // tag::implementation[]
         require(_dairyAddress != address(0));
+        milkProducerAddress = msg.sender;
         dairyAddress = _dairyAddress;
+        dairyApproval = false;
         consumed = false;
         // end::implementation[]
     }
@@ -28,8 +31,7 @@ contract MilkDelivery {
         emit MilkDelivered(address(this), msg.sender, dairyAddress, liters, price);
     }
 
-    function validateDelivery() onGoing() public {
-        // TODO: ensure that only the dairy can approve!
+    function validateDelivery() onGoing() dairyOnly() public {
         // mark the delivery as accepted by the dairy
         dairyApproval = true;
     }
@@ -38,13 +40,18 @@ contract MilkDelivery {
         return dairyApproval;
     }
 
+    function consume() external {
+        consumed = true;
+    }
+
     modifier onGoing() {
         require(!consumed);
         _;
     }
 
-    function consume() external {
-        consumed = true;
+    modifier dairyOnly() {
+        require(msg.sender == dairyAddress);
+        _;
     }
 
 }

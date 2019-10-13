@@ -16,23 +16,32 @@
                   <th>Laiterie</th>
                   <th class="text-center">Quantité (L)</th>
                   <th class="text-center">Prix (₿)</th>
-                  <th class="text-center">Disponibilité</th>
+                  <th class="text-center">Etat</th>
                 </thead>
                 <tbody>
                   <tr v-for="delivery in milkDeliveries" v-bind:key="delivery.id">
-                    <td class="delivery-id-col">#{{ delivery.id }}</td>
+                    <td class="delivery-id-col">#{{ delivery.id.substring(0, 6) }}</td>
                     <td>{{ delivery.date }}</td>
                     <td>{{ delivery.from }}</td>
                     <td>{{ delivery.to }}</td>
                     <td class="delivery-quantity-col">{{ delivery.quantity }} L</td>
                     <td class="delivery-price-col">{{ delivery.price }} ₿</td>
-                    <td class="delivery-consumed-col">
-                      <div v-if="delivery.consumed">
-                        <font-awesome-icon :icon="['fas', 'ban']" size="2x" :style="{ color: 'red' }" />
-                      </div>
-                      <div v-else>
-                        <font-awesome-icon :icon="['fas', 'check']" size="2x" :style="{ color: 'green' }" />
-                      </div>
+                    <td class="delivery-status-col">
+                      <span v-if="delivery.delivered">
+                        <font-awesome-icon :icon="['fas', 'truck']" size="2x" :style="{ color: 'green' }" />
+                      </span>
+                      <span v-else>
+                        <a v-if="milkDeliveryApprovalAllowed" @click="approveDelivery(delivery.id)">
+                          <font-awesome-icon :icon="['fas', 'truck']" size="2x" :style="{ color: 'gray' }" />
+                        </a>
+                        <font-awesome-icon v-else :icon="['fas', 'truck']" size="2x" :style="{ color: 'gray' }" />
+                      </span>
+                      <span v-if="delivery.consumed">
+                        <font-awesome-icon :icon="['fas', 'ban']" size="2x" :style="{ color: 'green' }" />
+                      </span>
+                      <span v-else>
+                        <font-awesome-icon :icon="['fas', 'check']" size="2x" :style="{ color: 'gray' }" />
+                      </span>
                     </td>
                   </tr>
                 </tbody>
@@ -41,7 +50,7 @@
           </div>
           <div class="row" v-if="milkDeliveryAllowed">
             <div class="col-12 offset-md-5">
-              <button type="button" class="btn btn-light legitRipple" data-toggle="modal" data-target="#add_milk_delivery">
+              <button type="button" class="btn btn-light legitRipple" @click="showNewMilkDeliveryModal=true">
                 Livrer du lait <i class="icon-paperplane ml-2"/>
               </button>
             </div>
@@ -49,26 +58,71 @@
         </div>
       </div>
     </div>
-    <div id="add_milk_delivery" class="modal fade" tabindex="-1" aria-hidden="true" style="display: none;">
-      <new-milk-delivery/>
-    </div>
+    <stack-modal title="Ajouter une livraison de lait" v-on:save="sendMilk"
+      :show="showNewMilkDeliveryModal" @close="showNewMilkDeliveryModal=false"
+      :saveButton="modalConfirmButtonConfiguration" :cancelButton="modalCancelButtonConfiguration">
+      <form action="#">
+        <div class="form-group row">
+          <label class="col-form-label col-lg-3">Laiterie</label>
+          <div class="col-lg-9">
+            <select class="form-control" v-model="dairy">
+              <option v-for="dairy in dairies" v-bind:key="dairy" v-bind:value="dairy">{{ dairy }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group form-group-feedback form-group-feedback-right row">
+          <label class="col-form-label col-lg-3">Quantité</label>
+          <div class="col-lg-9">
+            <input type="number" class="form-control form-control-lg" v-model="quantity">
+            <div class="form-control-feedback form-control-feedback-lg">Litres</div>
+          </div>
+        </div>
+        <div class="form-group form-group-feedback form-group-feedback-right row">
+          <label class="col-form-label col-lg-3">Prix</label>
+          <div class="col-lg-9">
+            <input type="number" class="form-control form-control-lg" v-model="price">
+            <div class="form-control-feedback form-control-feedback-lg">₿</div>
+          </div>
+        </div>
+      </form>
+    </stack-modal>
   </div>
 </template>
 
 <script>
 import API from '@/services/api'
-import NewMilkDelivery from '@/components/milk/NewMilkDelivery'
+import StackModal from '@innologica/vue-stackable-modal'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'MilkDeliveries',
   components: {
-    'new-milk-delivery': NewMilkDelivery
+    'stack-modal': StackModal
+  },
+  data () {
+    return {
+      dairy: null,
+      quantity: null,
+      price: null,
+      dairies: [
+        'Laiterie Beaufort'
+      ],
+      showNewMilkDeliveryModal: false,
+      modalConfirmButtonConfiguration: {
+        title: 'Livrer du lait'
+      },
+      modalCancelButtonConfiguration: {
+        title: 'Annuler'
+      }
+    }
   },
   computed: {
     ...mapGetters(['currentUser']),
     milkDeliveryAllowed () {
       return this.currentUser.name.startsWith('Eleveur')
+    },
+    milkDeliveryApprovalAllowed () {
+      return this.currentUser.name.startsWith('Laiterie')
     }
   },
   asyncComputed: {
@@ -84,12 +138,38 @@ export default {
         }
       }
     }
+  },
+  methods: {
+    async sendMilk () {
+      const api = new API(this.currentUser)
+      await api.sendMilk(this.dairy, this.quantity, this.price)
+      this.showNewMilkDeliveryModal = false
+      // reload milk deliveries
+      this.$asyncComputed.milkDeliveries.update()
+    },
+    async approveDelivery (milkDelivery) {
+      const result = await this.$swal({
+        title: 'Approuver la livraison',
+        html: `Souhaitez-vous approuver la réception de <b>${milkDelivery}</b> ?`,
+        showCancelButton: true,
+        confirmButtonText: 'Oui',
+        cancelButtonText: 'Non',
+        focusConfirm: false
+      })
+      if (result.value) {
+        const api = new API(this.currentUser)
+        await api.approveMilkDelivery(milkDelivery)
+        this.$swal('Confirmation', 'Vous avez accepté la livraison !', 'success')
+        // reload milk deliveries
+        this.$asyncComputed.milkDeliveries.update()
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-td.delivery-id-col, td.delivery-quantity-col, td.delivery-price-col, td.delivery-consumed-col {
+td.delivery-id-col, td.delivery-quantity-col, td.delivery-price-col, td.delivery-status-col {
   width: 120px;
   text-align: center;
 }

@@ -40,8 +40,8 @@ app.post('/milk-deliveries', async function (req, res, next) {
   }
 })
 
-app.post('/milk-deliveries/:milkDeliveryId/validate', function (req, res) {
-  let result = MilkDelivery.validateMilkDelivery(req.header('X-Participant'))
+app.post('/milk-deliveries/:milkDeliveryID/approval', async function (req, res) {
+  let result = await MilkDelivery.validateMilkDelivery(req.header('X-Participant'), req.params.milkDeliveryID)
   if (result.error) {
     next({status: 500, message: result.error})
   } else {

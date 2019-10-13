@@ -21,14 +21,14 @@ class API {
     try {
       const response = await this.api.get(`/milk-deliveries`)
       return response.data.map((md) => {
-        console.log(md)
         return {
-          id: md.id.substring(0, 6),
+          id: md.id,
           date: moment.unix(md.timestamp).fromNow(),
           from: md.from,
           to: md.to,
           quantity: md.quantity,
           price: md.price,
+          delivered: md.deliveryApproval,
           consumed: md.consumed
         }
       })
@@ -49,6 +49,10 @@ class API {
       console.log(e)
       throw e
     }
+  }
+  async approveMilkDelivery (milkDelivery) {
+    console.log(`Should approve milk delivery ${milkDelivery}`)
+    return this.api.post(`/milk-deliveries/${milkDelivery}/approval`)
   }
   async getCheeses () {
     try {

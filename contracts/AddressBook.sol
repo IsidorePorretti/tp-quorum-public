@@ -7,6 +7,7 @@ contract AddressBook is Ownable { //<2>
     mapping(address => uint32) private participantsZipCode; //<3>
     mapping(string => address) private indexEthereumAddress;
     mapping(string => string) private indexQuorumAddress;
+    mapping(address => string) private quorumAddresses;
 
     event ParticipantAdded(address indexed participant, uint32 zipCode);
 
@@ -24,6 +25,7 @@ contract AddressBook is Ownable { //<2>
         participantsZipCode[participant] = zipCode;
         indexEthereumAddress[name] = participant;
         indexQuorumAddress[name] = quorum;
+        quorumAddresses[participant] = quorum; 
         // end::implementation[]
         // emit ParticipantAdded event
         emit ParticipantAdded(participant, zipCode); //<5>
@@ -46,6 +48,10 @@ contract AddressBook is Ownable { //<2>
 
     function getQuorumAddress(string memory name) public view returns (string memory) {
         return indexQuorumAddress[name];
+    }
+
+    function getQuorumAddressFromName(address _address) public view returns (string memory) {
+        return quorumAddresses[_address];
     }
 
 }

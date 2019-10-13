@@ -31,6 +31,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/vue-fontawesome": "^0.1.7",
+    "@innologica/vue-stackable-modal": "^0.1.9",
     "@truffle/contract": "^4.0.36",
     "axios": "^0.19.0",
     "logplease": "^1.2.14",
@@ -46,6 +47,7 @@
     "vue-async-computed": "^3.3.1",
     "vue-fragment": "^1.5.0",
     "vue-router": "^3.0.1",
+    "vue-sweetalert2": "^2.1.1",
     "vuex": "^3.1.1",
     "web3": "^1.2.1"
   },

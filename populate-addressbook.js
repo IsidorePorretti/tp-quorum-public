@@ -11,7 +11,7 @@ module.exports = async (config) => {
 
     for (var participant in participants) {
       console.log(`Adding participant '${participant}'...`)
-      const ethereumAddress = participants[participant].ethereum_pk
+      const ethereumAddress = participants[participant].user_account
       const quorumAddress = participants[participant].quorum_pk
       const zipCode = participants[participant].zip
       //console.log(`Should add ${participant}: zip=${zipCode}, Eth=${ethereumAddress}, Quorum=${quorumAddress}`)

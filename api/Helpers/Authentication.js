@@ -1,21 +1,7 @@
-const AddressBook = require("../../data/addressbook")
+const AddressBook = require('../../data/addressbook')
 
 const getInurl = (participant) => {
   return AddressBook.participants[participant].quorum_url
-  /*
-  switch (participant) {
-    case 'Coopérative' :
-      return credentials.Cooperative.inurl
-    case milkhouse:
-      return credentials.Milkhouse.inurl
-    case farmerHauteluce :
-      return credentials.FarmerHauteluce.inurl
-    case farmerParly :
-      return credentials.FarmerParly.inurl
-    case farmeBastia :
-      return credentials.FarmerBastia.inurl
-  }
-  */
 }
 
 const getNameFromPublicAddress = (addr) => {
@@ -37,8 +23,20 @@ const getPublicAddressFromName = (participant) => {
   return AddressBook.participants[participant].user_account
 }
 
+const getPrivateAddressFromName = (participant) => {
+  return AddressBook.participants[participant].quorum_pk
+}
+
+const getPrivateAddressFromPublicAddress = (publicAddress) => {
+  return Object.values(AddressBook.participants)
+    .filter(p => p.user_account === publicAddress)
+    .map(p => p.quorum_pk)
+}
+
 module.exports = {
   getInurl,
   getNameFromPublicAddress,
-  getPublicAddressFromName
-};
+  getPublicAddressFromName,
+  getPrivateAddressFromName,
+  getPrivateAddressFromPublicAddress
+}
