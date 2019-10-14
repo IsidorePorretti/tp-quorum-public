@@ -1,7 +1,8 @@
-const uuidv4 = require('uuid/v4')
-const UUID_TRUNCATED_LENGTH = 6
-const CheeseService = require("../Services/Cheeses");
+// const uuidv4 = require('uuid/v4')
+// const UUID_TRUNCATED_LENGTH = 6
+const CheeseService = require('../Services/Cheeses')
 
+/*
 let cheeses = [{
   'id': uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
   'participants': [
@@ -15,7 +16,17 @@ let cheeses = [{
     1
   ]
 }]
+*/
 
+const Cheese = (participant, quantity, milkDeliveries) => {
+  return CheeseService.makeCheese(participant, quantity, milkDeliveries)
+}
+
+const getCheeses = (participant) => {
+  return CheeseService.getCheeses(participant)
+}
+
+/*
 const Cheese = (deliveries) => {
   let cheese = {
     id: uuidv4().substring(0, UUID_TRUNCATED_LENGTH),
@@ -31,11 +42,6 @@ const getCheese = (id) => {
   return cheeses[id]
 }
 
-
-const getCheeses = () => {
-  return cheeses
-}
-/*
 const getCheeses = (participant) => {
   return CheeseService.getCheeses(participant)
 };
@@ -43,6 +49,5 @@ const getCheeses = (participant) => {
 
 module.exports = {
   Cheese,
-  getCheese,
   getCheeses
 }

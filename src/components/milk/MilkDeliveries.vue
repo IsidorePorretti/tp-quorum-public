@@ -143,6 +143,8 @@ export default {
           try {
             const milkDeliveries = await api.getMilkDeliveries()
             this.dataLoading = false
+            // keep track of milk deliveries in the store for performance reasons
+            this.$store.dispatch('memorizeMilkDeliveries', milkDeliveries)
             return milkDeliveries
           } catch (e) {
             console.log(e)

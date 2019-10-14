@@ -20,6 +20,7 @@ const getNameFromPublicAddress = (addr) => {
 }
 
 const getPublicAddressFromName = (participant) => {
+  // console.log(`Searching addressbook for user account of participant ${participant}...`)
   return AddressBook.participants[participant].user_account
 }
 

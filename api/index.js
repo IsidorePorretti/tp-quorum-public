@@ -13,8 +13,8 @@ const CertificateTraceability = require('./Models/CertificateTraceability')
 app.use(bodyParser())
 app.use(cors())
 app.use(function (err, req, res, next) {
-  res.status(err.status).send(err.message);
-});
+  res.status(err.status).send(err.message)
+})
 
 // PARTICIPANTS
 app.get('/participants/:participantId', function (req, res) {
@@ -50,17 +50,31 @@ app.post('/milk-deliveries/:milkDeliveryID/approval', async function (req, res) 
 })
 
 // CHEESE
-app.post('/cheeses', function (req, res) {
+app.get('/cheeses', async function (req, res) {
+  let cheeses = await Cheese.getCheeses(req.header('X-Participant'))
+  if (cheeses.error) {
+    next({status: 500, message: cheeses.error})
+  } else {
+    res.send(cheeses)
+  }
+})
+
+app.post('/cheeses', async function (req, res) {
+  let result = await Cheese.Cheese(req.header('X-Participant'), req.body.quantity, req.body.deliveries)
+  if (result.error) {
+    next({status: 500, message: result.error})
+  } else {
+    res.send(result)
+  }
+
   res.send(Cheese.Cheese(req.body.deliveries))
 })
 
-app.get('/cheeses/:cheedeId', function (req, res) {
+/*
+app.get('/cheeses/:cheedeId', async function (req, res) {
   res.send(Cheese.getCheese(req.params.cheedeId))
 })
-
-app.get('/cheeses', function (req, res) {
-  res.send(Cheese.getCheeses())
-})
+*/
 
 /*
 app.get('/cheeses', async function (req, res) {
@@ -70,6 +84,7 @@ app.get('/cheeses', async function (req, res) {
 */
 
 // CHEESES TRACEABILITY
+/*
 app.get('/cheeses/traceability/:cheedeId', function (req, res) {
   res.send(CheeseTraceability.CheeseTraceability())
 })
@@ -82,6 +97,7 @@ app.get('/certificates/:cheedeId', function (req, res) {
 app.get('/certificates/traceability/:certificateId', function (req, res) {
   res.send(CertificateTraceability.CertificateTraceability())
 })
+*/
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')

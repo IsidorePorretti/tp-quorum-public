@@ -61,8 +61,8 @@ class API {
         return {
           id: md.id,
           date: moment.unix(md.timestamp).fromNow(),
-          participants: md.participants,
-          certified: true
+          milkDeliveries: md.deliveries,
+          certified: md.certified
         }
       })
     } catch (e) {
@@ -70,9 +70,10 @@ class API {
       throw e
     }
   }
-  async makeCheese (milkDeliveries) {
-    console.log(`Making cheese from ${milkDeliveries}...`)
+  async makeCheese (quantity, milkDeliveries) {
+    console.log(`Making ${quantity} cheese(s) from ${milkDeliveries}...`)
     return this.api.post('/cheeses', {
+      quantity: quantity,
       deliveries: milkDeliveries
     })
   }

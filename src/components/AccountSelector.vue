@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'AccountSelector',
   data: function () {
@@ -42,12 +44,12 @@ export default {
     }
   },
   computed: {
-    currentUser: {
-      get () { return this.$store.getters.currentUser }
-    }
+    ...mapGetters(['currentUser'])
   },
   mounted () {
-    this.changeCurrentUser(this.users[0])
+    if (this.currentUser.symbol === '') {
+      this.changeCurrentUser(this.users[0])
+    }
   },
   methods: {
     changeCurrentUser (user) {

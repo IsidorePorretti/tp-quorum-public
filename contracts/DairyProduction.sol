@@ -10,7 +10,7 @@ contract DairyProduction {
     address public dairy;
     address addressBookAddress;
 
-    event CheeseProduced(address indexed dairyProductionAddress, address indexed maker, uint32 quantity);
+    event CheeseProduced(address indexed dairyProductionAddress, address indexed dairy, uint32 quantity);
 
     constructor(address _addressBookAddress) public {
         require(_addressBookAddress != address(0));
@@ -24,7 +24,7 @@ contract DairyProduction {
         // call each MilkDelivery contract in order to mark it as "consumed"
         for (uint i = 0; i < _milkDeliveries.length; i++) {
             MilkDelivery milkDelivery = MilkDelivery(_milkDeliveries[i]);
-            milkDelivery.consumed();
+            milkDelivery.consume();
         }
         emit CheeseProduced(address(this), msg.sender, quantity);
         return address(this);
@@ -36,11 +36,15 @@ contract DairyProduction {
     function checkGeoBoundaries() public view returns (bool) {
         AddressBook addressBook = AddressBook(addressBookAddress);
         for (uint i = 0; i < milkDeliveries.length; i++) {
-            bool milkProducerGeoCompliant = addressBook.checkGeoBoundaries(milkDeliveries[i]);
+            bool milkProducerGeoCompliant = addressBook.checkGeoBoundaries(MilkDelivery(milkDeliveries[i]).milkProducerAddress());
             if (!milkProducerGeoCompliant)
                 return false;
         }
         return dairy != address(0) && addressBook.checkGeoBoundaries(dairy);
+    }
+
+    function getMilkDeliveriesCount() public constant returns(uint) {
+        return milkDeliveries.length;
     }
 
 }

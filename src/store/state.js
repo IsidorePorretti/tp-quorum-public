@@ -1,5 +1,6 @@
 let state = {
-  currentUser: {symbol: '', name: ''}
+  currentUser: {symbol: '', name: ''},
+  milkDeliveries: []
 }
 
 export default state
