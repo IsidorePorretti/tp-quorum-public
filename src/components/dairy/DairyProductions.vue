@@ -49,7 +49,7 @@
         </div>
       </div>
     </div>
-    <stack-modal title="Ajouter une livraison de lait" v-on:save="makeCheese"
+    <stack-modal title="Fabriquer du fromage" v-on:save="makeCheese"
       :show="showNewCheeseModal" @close="showNewCheeseModal=false"
       :saveButton="modalConfirmButtonConfiguration" :cancelButton="modalCancelButtonConfiguration">
       <form action="#" v-if="!dataLoading">
