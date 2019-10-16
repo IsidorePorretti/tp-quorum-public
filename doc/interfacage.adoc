@@ -2,6 +2,17 @@
 :sourcedir: ..
 ifndef::chapter-img[:chapter-img: ./img]
 
-include::interfacage-workflow.adoc[]
+== Développement d'une application
 
-include::interfacage-web3.adoc[]
+include::interfacage-intro.adoc[]
+
+ifdef::backend-pdf[<<<]
+include::interfacage-milk-delivery.adoc[]
+
+ifdef::backend-pdf[<<<]
+include::interfacage-dairy-production.adoc[]
+
+ifdef::backend-pdf[<<<]
+include::interfacage-bonus.adoc[]
+
+// include::interfacage-web3.adoc[]

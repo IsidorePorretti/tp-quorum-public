@@ -1,5 +1,3 @@
-== Déploiement des smart-contracts dans Kaleido
-
 === Déploiement du smart-contract ```AddressBook```
 
 Le smart-contract ```AddressBook``` étant public, ```truffle``` peut simplement
@@ -40,8 +38,6 @@ avec les données des participants.
 
 Outre l'adresse Ethereum et le code postal de chaque participant nous aurons
 aussi besoin de l'adresse pour les transactions privées Quorum.
-
-ifdef::backend-pdf[<<<]
 
 Afin de simplifier cela, un script est fourni permettant de renseigner
 l'```AddressBook``` à partir d'un fichier Json indiquant toutes les données

@@ -3,9 +3,10 @@ const contracts = require('../Helpers/Contracts')
 const Blockchain = require('../Helpers/BlockchainHelpers')
 const ethers = require('ethers')
 
-const FILTER_FROM_BLOCK = 179014
+const FILTER_FROM_BLOCK = 179014 // <1>
 
 const getCheeses = async (participant) => {
+  // tag::implementation[]
   console.log(`Searching for cheeses for '${participant}'`)
   const web3 = new ethers.providers.Web3Provider(await contracts.setupWeb3(participant))
 
@@ -66,9 +67,11 @@ const getCheeses = async (participant) => {
   }
   console.log(results)
   return results
+  // end::implementation[]
 }
 
 const makeCheese = async (participant, quantity, milkDeliveries) => {
+  // tag::implementation[]
   try {
     // fetch Ethereum address of the participant
     const userAccountFrom = credentials.getPublicAddressFromName(participant)
@@ -94,6 +97,7 @@ const makeCheese = async (participant, quantity, milkDeliveries) => {
     console.log(e)
     return {error: e}
   }
+  // end::implementation[]
 }
 
 module.exports = {

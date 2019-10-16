@@ -6,8 +6,6 @@ include::kaleido-setup.adoc[]
 
 include::address-book.adoc[]
 
-include::smart-beaufort.adoc[]
-
 include::truffle-kaleido.adoc[]
 
 include::kaleido-deployment.adoc[]
