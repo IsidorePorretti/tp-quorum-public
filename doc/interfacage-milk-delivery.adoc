@@ -153,7 +153,7 @@ Puisque nous disposons d'une méthode permettant de déclencher une livraison
 de lait il est grand temps de lancer l'application !
 
 Pour démarrer le back-end, via un terminal et depuis le dossier `api`,
-lancez la commande `npm run dev`.
+lancez la commande `npm run start`.
 
 Pour démarrer le front-end, via un autre terminal et depuis le dossier racine
 du projet, lancez la commande `npm run start`.
