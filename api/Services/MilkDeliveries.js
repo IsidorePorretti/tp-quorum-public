@@ -1,34 +1,11 @@
-const credentials = require('../Helpers/Authentication') // <1>
+const credentials = require('../Helpers/Authentication')
 const contracts = require('../Helpers/Contracts')
-const Blockchain = require('../Helpers/BlockchainHelpers') // <2>
+const Blockchain = require('../Helpers/BlockchainHelpers')
 const ethers = require('ethers')
 
-const FILTER_FROM_BLOCK = 179014 // <3>
-
-// tag::implementation[]
-const extractDeliveryApproval = async (participant, milkDeliveryID) => {
-  let userAccountFrom = credentials.getPublicAddressFromName(participant)
-  // console.log(`Transactions will be sent from '${participant}' having address '${userAccountFrom}'`)
-  let MilkDelivery = await contracts.setupMilkDelivery(participant, userAccountFrom)
-  let milkDelivery = await MilkDelivery.at(milkDeliveryID)
-  const deliveryApproval = await milkDelivery.checkDeliveryApproval()
-  // console.log(`Milk delivery received by dairy? ${deliveryApproval}`)
-  return deliveryApproval
-}
-
-const extractConsumedStatus = async (participant, milkDeliveryID) => {
-  let userAccountFrom = credentials.getPublicAddressFromName(participant)
-  // console.log(`Transactions will be sent from '${participant}' having address '${userAccountFrom}'`)
-  let MilkDelivery = await contracts.setupMilkDelivery(participant, userAccountFrom)
-  let milkDelivery = await MilkDelivery.at(milkDeliveryID)
-  const consumed = await milkDelivery.consumed()
-  // console.log(`Milk delivery consumed? ${consumed}`)
-  return consumed
-}
-// end::implementation[]
+const FILTER_FROM_BLOCK = 10000000
 
 const getMilkDeliveries = async (participant) => {
-  // tag::implementation[]
   try {
     console.log(`Searching for milk deliveries for '${participant}'`)
     const web3 = new ethers.providers.Web3Provider(await contracts.setupWeb3(participant))
@@ -67,23 +44,7 @@ const getMilkDeliveries = async (participant) => {
         }
       })
 
-    for (let index = 0; index < results.length; index++) {
-      const r = results[index]
-      if (typeof r.id === 'undefined') {
-        console.error(`[${index + 1}/${results.length}] Missing milk delivery ID. Ignoring...`)
-        results.splice(index, 1)
-        continue
-      }
-      console.debug(`[${index + 1}/${results.length}] Fetching details of '${r.id}' milk delivery...`)
-      // extract block date from block number
-      r.timestamp = await Blockchain.extractBlockDate(web3, r.block)
-      // extract delivery approval status
-      r.deliveryApproval = await extractDeliveryApproval(participant, r.id)
-      // extract consumed status
-      r.consumed = await extractConsumedStatus(participant, r.id)
-      // pause for a while in order to avoid 'rate limit' errors from Kaleido
-      await Blockchain.sleep(1000)
-    }
+    // TODO: enrich results array with timestamp, deliveryApproval and consumed data!
 
     // console.log(results)
     return results
@@ -91,12 +52,9 @@ const getMilkDeliveries = async (participant) => {
     console.log(e)
     return {error: e}
   }
-  // end::implementation[]
 }
 
-// tag::createMilkDelivery[]
 const createMilkDelivery = async (participant, quantity, price, dairy) => {
-  // tag::implementation[]
   try {
     // fetch Ethereum address of the participant
     const userAccountFrom = credentials.getPublicAddressFromName(participant)
@@ -124,44 +82,9 @@ const createMilkDelivery = async (participant, quantity, price, dairy) => {
     console.log(e)
     return {error: e}
   }
-  // end::implementation[]
 }
-// end::createMilkDelivery[]
 
 const validateMilkDelivery = async (participant, milkDeliveryID) => {
-  // tag::implementation[]
-  try {
-    const userAccountFrom = credentials.getPublicAddressFromName(participant)
-    let MilkDelivery = await contracts.setupMilkDelivery(participant, userAccountFrom)
-
-    console.log(`Getting deployed version of MilkDelivery at address: '${milkDeliveryID}'...`)
-    let milkDelivery = await MilkDelivery.at(milkDeliveryID)
-
-    // fetch Quorum private address of the coopérative
-    let addressBook = await contracts.getAddressBook(participant)
-    const cooperativePrivateAddress = await addressBook.getQuorumAddress('Coopérative')
-
-    // fetch Quorum private address of the milk producer
-    let milkProducerPublicAddress = await milkDelivery.milkProducerAddress()
-    console.log(`Milk producer public address: '${milkProducerPublicAddress}'`)
-    const milkProducerPrivateAddress = await addressBook.getQuorumAddressFromName(milkProducerPublicAddress, {gas: 0xffffffff})
-    console.log(`Milk producer private address: '${milkProducerPrivateAddress}'`)
-
-    console.log('Validating milk delivery...')
-    try {
-      // milkProducerPrivateAddress
-      await milkDelivery.validateDelivery({ privateFor: [milkProducerPrivateAddress, cooperativePrivateAddress] })
-      console.log('Finished!')
-      return {}
-    } catch (e) {
-      console.log(e)
-      throw e
-    }
-  } catch (e) {
-    console.log(e)
-    return {error: e}
-  }
-  // end::implementation[]
 }
 
 module.exports = {
