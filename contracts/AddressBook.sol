@@ -1,5 +1,4 @@
-pragma solidity ^0.4.22;
-
+pragma solidity ^0.5.0;
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 /// @title An address book for zip code of participants
