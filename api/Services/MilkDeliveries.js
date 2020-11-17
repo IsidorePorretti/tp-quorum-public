@@ -3,7 +3,7 @@ const contracts = require('../Helpers/Contracts')
 const Blockchain = require('../Helpers/BlockchainHelpers')
 const ethers = require('ethers')
 
-const FILTER_FROM_BLOCK = 10000000
+const FILTER_FROM_BLOCK = 0
 
 const getMilkDeliveries = async (participant) => {
   try {
