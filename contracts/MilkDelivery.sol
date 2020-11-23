@@ -47,11 +47,13 @@ contract MilkDelivery {
     /// Modifier based on the value of consumed.
     /// @dev if consumed, then the delivery is not onGoing
     modifier onGoing() {
+        _;
         // TODO: implement this!
     }
 
     /// Modifier ensuring that only the dairy of this milk delivery can make a call
     modifier dairyOnly() {
+        _;
         // TODO: implement this!
     }
 
