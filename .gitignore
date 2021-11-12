@@ -6,3 +6,4 @@ dist
 doc/img/*.svg
 build
 node_modules
+.idea
