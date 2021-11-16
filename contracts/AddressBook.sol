@@ -16,6 +16,11 @@ contract AddressBook is Ownable {
   /// @param zipCode the zip code of the participant
   function addParticipantZipCode(string calldata name,address participant, string calldata quorum, uint32 zipCode) onlyOwner external {
     // add the participants to the mapping
+    participantsZipCode[participant] = zipCode;
+    indexEthereumAddress[name] = participant;
+    indexQuorumAddress[name] = quorum;
+    quorumAddresses[participant] = quorum;
+
     // emit ParticipantAdded event
     emit ParticipantAdded(participant, zipCode);
   }
@@ -25,6 +30,16 @@ contract AddressBook is Ownable {
   /// @return true if the participant is in the geo boundaries of the AOP label
   function checkGeoBoundaries(address participant) public view returns (bool) {
     // check if the participant is in the allowed zip codes
+    
+    uint32 zipP = participantsZipCode[participant];
+    
+
+    if (zipP == 73620 || zipP == 73210 || zipP == 73270) {
+      return true;
+    }
+    else {
+      return false;
+      }
   }
 
   function getEthereumAddress(string memory name) public view returns (address) {
