@@ -8,7 +8,7 @@ const DairyProductionJson = require('../../build/contracts/DairyProduction.json'
 
 const setupWeb3 = async (participant) => {
   const participantNodeURL = credentials.getInurl(participant)
-  // console.log(`Connecting to participant node at ${participantNodeURL}`)
+   console.log(`Connecting to participant node at ${participantNodeURL}`)
   let provider = new Web3.providers.HttpProvider(participantNodeURL)
   return provider
 }
